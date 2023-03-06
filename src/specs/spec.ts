@@ -1,10 +1,17 @@
 import * as z from 'zod';
-import { PayloadScheme } from './payload_scheme';
+import { TypeScheme } from './scheme';
 
 const Payload = z.object({
     id: z.string(),
-    scheme: PayloadScheme,
+    name: z.string(),
+    uint: z.string().optional(),
+    description: z.string().optional(),
+    readOnly: z.boolean().optional(),
+    required: z.boolean().optional(),
+    typeScheme: TypeScheme
 });
+
+const Payloads = Payload.array();
 
 const EntityCommand_Delete = z.object({
     id: z.enum(['delete'])
@@ -19,7 +26,7 @@ const EntityCommand_Execute = z.object({
     id: z.enum(['execute']),
     name: z.string(),
     function: z.string().optional(),
-    payloads: Payload.array()
+    payloads: Payloads
 });
 
 const EntityCommand = EntityCommand_Delete.or(EntityCommand_Update).or(EntityCommand_Execute);
@@ -44,7 +51,7 @@ const EntitySectionDefinition = z.object({
     payloads: Payload.array()
 });
 
-const EntityDifinition = z.object({
+const EntityDefinition = z.object({
     name: z.string(),
     singleton: z.boolean().optional(),
     globalCommands: EntityGlobalCommand.array(),
@@ -88,14 +95,19 @@ export const EntityCMS_Specification = z.object({
     authentication: z.enum(['none', 'basic', 'baerer']),
     entities: z.record(
         z.string(),
-        EntityDifinition
+        EntityDefinition
     ),
 });
 
 export type EntityCMS_Specification = z.infer<typeof EntityCMS_Specification>;
 export type EntityCMS_MenuItem = z.infer<typeof EntityCMS_MenuItem>;
-export type EntityDifinition = z.infer<typeof EntityDifinition>;
+export type EntityDefinition = z.infer<typeof EntityDefinition>;
 export type EntitySectionDefinition = z.infer<typeof EntitySectionDefinition>;
 export type EntityGlobalCommand = z.infer<typeof EntityGlobalCommand>;
 export type EntityCommand = z.infer<typeof EntityCommand>;
 export type Payload = z.infer<typeof Payload>;
+export type Payloads = z.infer<typeof Payloads>;
+
+// createBackend({ name: version })
+//     .createEntity()
+//     .createCommand({handler});

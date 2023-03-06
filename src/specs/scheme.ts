@@ -18,12 +18,13 @@ const TypeScheme_Number: z.ZodType<TypeScheme_Number> = z.object({
     decimals: z.number().int().min(0).optional(),
 });
 
-export type TypeScheme_Integer = { type: 'integer', min?: number, max?: number, enum?: number[] };
+export type TypeScheme_Integer = { type: 'integer', min?: number, max?: number, step?: number };
 const TypeScheme_Integer: z.ZodType<TypeScheme_Integer> = z.object({
     type: z.enum(['integer']),
     min: z.number().int().optional(),
     max: z.number().int().optional(),
     enum: z.number().array().optional(),
+    step: z.number().int()
 });
 
 export type TypeScheme_Date = { type: 'date' };
@@ -36,13 +37,13 @@ const TypeScheme_Boolean: z.ZodType<TypeScheme_Boolean> = z.object({
     type: z.enum(['bool']),
 });
 
-export type TypeScheme_Array = { type: 'array', typeScheme: _TypeScheme };
+export type TypeScheme_Array = { type: 'array', typeScheme: TypeScheme };
 const TypeScheme_Array: z.ZodType<TypeScheme_Array> = z.object({
     type: z.enum(['array']),
     typeScheme: z.lazy(() => TypeScheme),
 });
 
-export type TypeScheme_Object = { type: 'object', typeSchemes: { [key: string]: _TypeScheme} };
+export type TypeScheme_Object = { type: 'object', typeSchemes: { [key: string]: TypeScheme } };
 const TypeScheme_Object: z.ZodType<TypeScheme_Object> = z.object({
     type: z.enum(['object']),
     typeSchemes: z.record(
@@ -64,18 +65,7 @@ const TypeScheme_Entity: z.ZodType<TypeScheme_Entity> = z.object({
     entity: z.string(),
 });
 
-export type _TypeScheme =
-    TypeScheme_String | 
-    TypeScheme_Number |
-    TypeScheme_Integer |
-    TypeScheme_Date |
-    TypeScheme_Boolean |
-    TypeScheme_Array |
-    TypeScheme_Object |
-    TypeScheme_Binary |
-    TypeScheme_Entity;
-
-export const TypeScheme: z.ZodType<_TypeScheme> = TypeScheme_String
+export const TypeScheme = TypeScheme_String
     .or(TypeScheme_Number)
     .or(TypeScheme_Integer)
     .or(TypeScheme_Date)
