@@ -6,7 +6,7 @@ export interface Payloads {
     validated: boolean;
 }
 
-enum FieldType {
+export enum DataType {
     string = "string",
     number = "number",
     integer = "integer",
@@ -55,11 +55,11 @@ export abstract class PayloadField<TWrite, TRead> {
     abstract setValue(val: TWrite): Promise<void>;
     abstract value(): Promise<TRead>;
 
-    as<T extends FieldType>(): PayloadField<FieldWriteType[T], FieldReadType[T]> {
+    as<T extends DataType>(): PayloadField<FieldWriteType[T], FieldReadType[T]> {
         return this as PayloadField<FieldWriteType[T], FieldReadType[T]>;
     }
     
-    asArray<T extends FieldType>(): PayloadField_Array<T> {
+    asArray<T extends DataType>(): PayloadField_Array<T> {
         return this as PayloadField_Array<T>;
     }
 }
