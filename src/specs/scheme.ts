@@ -7,6 +7,7 @@ const TypeScheme_String: z.ZodType<TypeScheme_String> = z.object({
     regex: z.string().optional(),
     min: z.number().int().optional(),
     max: z.number().int().optional(),
+    multiline: z.boolean(),
     enum: z.string().array(),
 });
 

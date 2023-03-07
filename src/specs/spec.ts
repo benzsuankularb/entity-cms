@@ -6,6 +6,7 @@ const Payload = z.object({
     name: z.string(),
     uint: z.string().optional(),
     description: z.string().optional(),
+    placeholder: z.string().optional(),
     readOnly: z.boolean().optional(),
     required: z.boolean().optional(),
     typeScheme: TypeScheme
@@ -107,7 +108,3 @@ export type EntityGlobalCommand = z.infer<typeof EntityGlobalCommand>;
 export type EntityCommand = z.infer<typeof EntityCommand>;
 export type Payload = z.infer<typeof Payload>;
 export type Payloads = z.infer<typeof Payloads>;
-
-// createBackend({ name: version })
-//     .createEntity()
-//     .createCommand({handler});
