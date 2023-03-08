@@ -3,7 +3,10 @@ import { EntityGlobalCommand } from './command';
 import { Entity, ListEntity } from './models';
 
 export class EntityCMSContext {
+    rpc: any;
 }
+
+export type EntityCMSFunctionHandler = () => void;
 
 export class EntityCMSClient {
 
@@ -11,6 +14,10 @@ export class EntityCMSClient {
     
     constructor(spec: Spec.EntityCMS_Specification) {
         this.spec = spec;
+    }
+    
+    addFunction(name: string, handler: EntityCMSFunctionHandler): void {
+        // 
     }
     
     getDefinition(entity: string): EntityDefinition {
