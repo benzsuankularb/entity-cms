@@ -1,9 +1,9 @@
-import { PayloadsInternal } from "./payload/payloads";
+import { Payloads } from "./payload/payloads";
 
 export interface EntitySection {
     id: string;
     name: string;
-    payloads: PayloadsInternal;
+    payloads: Payloads;
     readOnly: boolean;
     update(): Promise<void>;
 }
@@ -12,7 +12,7 @@ export interface EntityGlobalCommand {
     command: string;
     scope: string;
     name: string;
-    payloads: PayloadsInternal;
+    payloads: Payloads;
     execute(): Promise<void>;
 }
 
@@ -21,6 +21,6 @@ export interface EntityCommand {
     command: string;
     scope: string;
     name: string;
-    payloads: PayloadsInternal;
+    payloads: Payloads;
     execute(): Promise<void>;
 }

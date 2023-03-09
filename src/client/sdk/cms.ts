@@ -17,19 +17,19 @@ export class EntityCMSClient {
         return this;
     }
     
-    getEndpoint(id: string): EntityEndPoint {
+    getEndpoint(entityId: string, endpoint?: string): EntityEndPoint {
         const { context } = this;
-        const endpointSpec = context.spec.endpoints[id];
-        if (!endpointSpec) {
-            throw `invalid endpoint ${id}`
+        const entitySpec = context.spec.entities[entityId];
+        if (!entitySpec) {
+            throw `invalid endpoint ${entityId}`
         }
         
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        const entityDefSpec = context.spec.entities[endpointSpec.entity]!;
+        //TODO validate endpoint exist.
+        
         return new EntityEndPoint({
             context,
-            endpointSpec,
-            entityDefSpec,
+            entitySpec,
+            endpoint
         });
     }
 
