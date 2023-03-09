@@ -1,7 +1,7 @@
 import * as z from 'zod';
 import { TypeScheme } from './scheme';
 
-const Payload = z.object({
+const Spec_Payload = z.object({
     id: z.string(),
     name: z.string(),
     uint: z.string().optional(),
@@ -12,7 +12,7 @@ const Payload = z.object({
     typeScheme: TypeScheme
 });
 
-const Payloads = Payload.array();
+const Spec_Payloads = Spec_Payload.array();
 
 const EntityCommand_Delete = z.object({
     id: z.enum(['delete'])
@@ -27,37 +27,36 @@ const EntityCommand_Execute = z.object({
     id: z.enum(['execute']),
     name: z.string(),
     function: z.string().optional(),
-    payloads: Payloads
+    payloads: Spec_Payloads
 });
 
-const EntityCommand = EntityCommand_Delete.or(EntityCommand_Update).or(EntityCommand_Execute);
+const Spec_EntityCommand = EntityCommand_Delete.or(EntityCommand_Update).or(EntityCommand_Execute);
 
 const EntityGlobalCommand_Create = z.object({
     id: z.enum(['create']),
-    payloads: Payload.array()
+    payloads: Spec_Payload.array()
 });
 
 const EntityGlobalCommand_Execute = z.object({
     id: z.enum(['execute']),
     name: z.string(),
     function: z.string().optional(),
-    payloads: Payload.array()
+    payloads: Spec_Payload.array()
 });
 
-const EntityGlobalCommand = EntityGlobalCommand_Create.and(EntityGlobalCommand_Execute);
+const Spec_EntityGlobalCommand = EntityGlobalCommand_Create.and(EntityGlobalCommand_Execute);
 
-const EntitySectionDefinition = z.object({
+const Spec_EntitySectionDefinition = z.object({
     id: z.string(),
     name: z.string(),
-    payloads: Payload.array()
+    payloads: Spec_Payload.array()
 });
 
-const EntityDefinition = z.object({
-    name: z.string(),
+const Spec_EntityDefinition = z.object({
     singleton: z.boolean().optional(),
-    globalCommands: EntityGlobalCommand.array(),
-    commands: EntityCommand.array(),
-    sections: EntitySectionDefinition.array(),
+    globalCommands: Spec_EntityGlobalCommand.array(),
+    commands: Spec_EntityCommand.array(),
+    sections: Spec_EntitySectionDefinition.array(),
     display: z.object({
         list: z.object({
             columns: z.object({
@@ -77,34 +76,44 @@ const EntityDefinition = z.object({
     }).optional()
 });
 
-type _EntityCMS_MenuItem = {
-    name: string;
-    entity?: string;
-    items: _EntityCMS_MenuItem[];
-};
-
-const EntityCMS_MenuItem: z.ZodType<_EntityCMS_MenuItem> = z.object({
+const Spec_EntityEndPoint = z.object({
     name: z.string(),
-    entity: z.string().optional(),
-    items: z.lazy(() => EntityCMS_MenuItem.array()),
+    entity: z.string()
 });
 
-export const EntityCMS_Specification = z.object({
+type _MenuItem = {
+    name: string;
+    items: _MenuItem[];
+    endpoint?: string;
+};
+
+const Spec_MenuItem: z.ZodType<_MenuItem> = z.object({
+    name: z.string(),
+    entity: z.string().optional(),
+    items: z.lazy(() => Spec_MenuItem.array()),
+});
+
+export const Spec_Root = z.object({
     version: z.string(),
     name: z.string(),
-    menuItems: EntityCMS_MenuItem.array(),
     authentication: z.enum(['none', 'basic', 'baerer']),
+    menuItems: Spec_MenuItem.array(),
+    endpoints: z.record(
+        z.string(),
+        Spec_EntityEndPoint,
+    ),
     entities: z.record(
         z.string(),
-        EntityDefinition
+        Spec_EntityDefinition
     ),
 });
 
-export type EntityCMS_Specification = z.infer<typeof EntityCMS_Specification>;
-export type EntityCMS_MenuItem = z.infer<typeof EntityCMS_MenuItem>;
-export type EntityDefinition = z.infer<typeof EntityDefinition>;
-export type EntitySectionDefinition = z.infer<typeof EntitySectionDefinition>;
-export type EntityGlobalCommand = z.infer<typeof EntityGlobalCommand>;
-export type EntityCommand = z.infer<typeof EntityCommand>;
-export type Payload = z.infer<typeof Payload>;
-export type Payloads = z.infer<typeof Payloads>;
+export type Spec_Root = z.infer<typeof Spec_Root>;
+export type Spec_MenuItem = z.infer<typeof Spec_MenuItem>;
+export type Spec_EntityEndPoint = z.infer<typeof Spec_EntityEndPoint>;
+export type Spec_EntityDefinition = z.infer<typeof Spec_EntityDefinition>;
+export type Spec_EntitySectionDefinition = z.infer<typeof Spec_EntitySectionDefinition>;
+export type Spec_EntityGlobalCommand = z.infer<typeof Spec_EntityGlobalCommand>;
+export type Spec_EntityCommand = z.infer<typeof Spec_EntityCommand>;
+export type Spec_Payload = z.infer<typeof Spec_Payload>;
+export type Spec_Payloads = z.infer<typeof Spec_Payloads>;

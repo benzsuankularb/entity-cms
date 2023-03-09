@@ -1,12 +1,12 @@
 import { TypeScheme } from "../../specs";
-import { EmbededEntity } from "./models";
+import { EmbededEntity } from "./common";
 
 export interface Payloads {
     fields: PayloadField_Unknown[];
     validated: boolean;
 }
 
-export enum FieldType {
+export enum DataType {
     string = "string",
     number = "number",
     integer = "integer",
@@ -56,11 +56,11 @@ export abstract class PayloadField<TWrite, TRead> {
     abstract setValue(val: TWrite): void;
     abstract value(): TRead;
 
-    as<T extends FieldType>(): PayloadField<DataType_Write[T], DataType_Read[T]> {
+    as<T extends DataType>(): PayloadField<DataType_Write[T], DataType_Read[T]> {
         return this as PayloadField<DataType_Write[T], DataType_Read[T]>;
     }
     
-    asArray<T extends FieldType>(): PayloadField_Array<T> {
+    asArray<T extends DataType>(): PayloadField_Array<T> {
         return this as PayloadField_Array<T>;
     }
 }

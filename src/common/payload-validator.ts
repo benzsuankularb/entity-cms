@@ -6,7 +6,7 @@ import { TypeScheme } from "../specs";
 
 type ValidatorFunc = (value: unknown) => boolean;
 
-export function createPayloadsValidator(payloadsSpec: spec.Payloads) {
+export function createPayloadsValidator(payloadsSpec: spec.Spec_Payloads) {
     const typeValidators: { [id: string]: ValidatorFunc } = {};
     payloadsSpec.forEach(spec => typeValidators[spec.id] = createTypeValidator(spec.typeScheme));
     

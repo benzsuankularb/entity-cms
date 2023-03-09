@@ -1,78 +1,39 @@
 import * as Spec from '../../specs';
-import { EntityGlobalCommand } from './command';
-import { Entity, ListEntity } from './models';
+import { CustomFunction, EntityCMSContext } from './common';
+import { EntityEndPoint } from './enitity-endpoint';
 
-export class EntityCMSContext {
-    rpc: any;
-}
-
-export type EntityCMSFunctionHandler = () => void;
+export type MenuItem = Spec.Spec_MenuItem;
 
 export class EntityCMSClient {
 
-    private spec: Spec.EntityCMS_Specification;
+    private context: EntityCMSContext;
     
-    constructor(spec: Spec.EntityCMS_Specification) {
-        this.spec = spec;
+    constructor(options: { spec: Spec.Spec_Root }) {
+        this.context = new EntityCMSContext(options);
     }
     
-    addFunction(name: string, handler: EntityCMSFunctionHandler): void {
-        // 
+    addFunction(id: string, handler: CustomFunction): this {
+        this.context.functions[id] = handler;
+        return this;
     }
     
-    getDefinition(entity: string): EntityDefinition {
-        const spec = this.spec.entities[entity];
-        if (!spec) {
-            throw `invalid spec for entity ${entity}`
+    getEndpoint(id: string): EntityEndPoint {
+        const { context } = this;
+        const endpointSpec = context.spec.endpoints[id];
+        if (!endpointSpec) {
+            throw `invalid endpoint ${id}`
         }
-        return new EntityDefinition(spec);
+        
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        const entityDefSpec = context.spec.entities[endpointSpec.entity]!;
+        return new EntityEndPoint({
+            context,
+            endpointSpec,
+            entityDefSpec,
+        });
     }
 
-    getMenu(): Spec.EntityCMS_MenuItem[] {
-        return this.spec.menuItems
-    }
-}
-
-export class EntityDefinition {
-    private spec: Spec.EntityDefinition;
-
-    readonly singleton: boolean = true;
-    readonly globalCommands: EntityGlobalCommand[] = [];
-    
-    constructor(spec: Spec.EntityDefinition) {
-        this.spec = spec;
-    }
-
-    getList(): EntityList {
-        throw "";
-    }
-
-    async getEntity(id: string): Promise<Entity> {
-        return { // TODO
-            id,
-            sections: [],
-            commands: [],
-        };
-    }
-}
-
-export interface EntityList_FetchOptions {
-    limit?: number;
-    offset?: number;
-    filter_field?: string;
-    filter_value?: unknown;
-    sort_field?: string;
-}
-
-export interface EntityListColumnField {
-    name: string;
-    type: Spec.TypeScheme;
-}
-
-export class EntityList {
-    readonly columnFields: { field: string; name: string; type: Spec.TypeScheme; }[] = [] //TODO
-    
-    async fetch(options: EntityList_FetchOptions): Promise<[items: ListEntity[], total: number]> {
-        return [[], 0];
+    getMenu(): MenuItem[] {
+        return this.context.spec.menuItems
     }
 }
