@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
-import { TypeScheme } from "../../../specs";
-import { EventEmitter } from "../../utils/event";
-import { DeepReadonly } from "../../utils/types";
-import { EmbededEntity, EntityCMSContext } from "../common";
+import { TypeScheme } from "../../specs";
+import { EventEmitter } from "../utils/event";
+import { DeepReadonly } from "../utils/types";
+import { EmbededEntity, EntityCMSContext } from "./common";
 import { PayloadsInternal } from "./payloads";
 
 export interface PayloadField<T> {

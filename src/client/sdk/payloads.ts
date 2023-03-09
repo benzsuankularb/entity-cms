@@ -1,7 +1,7 @@
-import { createPayloadsValidator, ValidatePayloadsFunction } from '../../../common/payload-validator';
-import * as Spec from '../../../specs';
-import { EventEmitter } from "../../utils/event";
-import { EmbededEntity, EntityCMSContext } from "../common";
+import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payload-validator';
+import * as Spec from '../../specs';
+import { EventEmitter } from "../utils/event";
+import { EmbededEntity, EntityCMSContext } from "./common";
 import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload';
 
 export interface Payloads {

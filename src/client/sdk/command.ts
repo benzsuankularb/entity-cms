@@ -1,4 +1,4 @@
-import { Payloads } from "./payload/payloads";
+import { Payloads } from "./payloads";
 
 export interface EntitySection {
     id: string;

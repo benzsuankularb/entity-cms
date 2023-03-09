@@ -96,7 +96,7 @@ type _MenuItem = {
 
 const Spec_MenuItem: z.ZodType<_MenuItem> = z.object({
     name: z.string(),
-    endpoints: z.object({
+    endpoint: z.object({
         entity: z.string(),
         endpoint: z.string().optional(),
     }).optional(),
