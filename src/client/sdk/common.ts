@@ -13,6 +13,7 @@ export class EntityCMSContext {
 }
 
 export interface EmbededEntity {
+    entity: string;
     id: string;
     display: string;
 }

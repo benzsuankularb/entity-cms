@@ -1,69 +1,41 @@
-import { ExecuteCommandOptions, ExecuteCreateCommandOptions, ExecuteGlobalCommandOptions, GetOptions, ListOptions, SuggestCommandInputOptions, SuggestGlobalCommandInputOptions } from "../sdk/endpoint-handler";
 import { t } from "./context";
+import { ExecuteCommandOptions, ExecuteCreateCommandOptions, ExecuteGlobalCommandOptions, GetOptions, ListOptions, SuggestCommandInputOptions, SuggestGlobalCommandInputOptions } from "./endpoint-handler";
 
 export const entityEndpointRouter = t.router({
     list: t.procedure
         .input(ListOptions)
         .query(async ({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.list(input);
+            return ctx.entityEndpointHandler.list(input);
         }),
     get: t.procedure
         .input(GetOptions)
         .query(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.get(input);
+            return ctx.entityEndpointHandler.get(input);
         }),
     executeCommand: t.procedure
         .input(ExecuteCommandOptions)
         .mutation(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.executeCommand(input);
+            return ctx.entityEndpointHandler.executeCommand(input);
         }),
     suggestCommandInput: t.procedure
         .input(SuggestCommandInputOptions)
-        .mutation(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.suggestCommandInput(input);
+        .query(({ input, ctx }) => {
+            return ctx.entityEndpointHandler.suggestCommandInput(input);
         }),
     executeCreateCommand: t.procedure
         .input(ExecuteCreateCommandOptions)
         .mutation(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.executeCreateCommand(input);
+            return ctx.entityEndpointHandler.executeCreateCommand(input);
         }),
     executeGlobalCommand: t.procedure
         .input(ExecuteGlobalCommandOptions)
         .mutation(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.executeGlobalCommand(input);
+            return ctx.entityEndpointHandler.executeGlobalCommand(input);
         }),
     suggestGlobalCommandInput: t.procedure
         .input(SuggestGlobalCommandInputOptions)
-        .mutation(({ input, ctx }) => {
-            const handler = ctx.serverAdapter.getEntityEndpointHandler(input.endpoint);
-            if (!handler) {
-                throw 'handler not found'; //TODO
-            }
-            return handler.suggestGlobalCommandInput(input);
+        .query(({ input, ctx }) => {
+            return ctx.entityEndpointHandler.suggestGlobalCommandInput(input);
         })
 });
 

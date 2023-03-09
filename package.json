@@ -10,6 +10,7 @@
   ],
   "devDependencies": {
     "@types/jest": "^29.2.2",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.9",
     "@typescript-eslint/eslint-plugin": "^5.42.0",
     "@typescript-eslint/parser": "^5.42.0",
@@ -36,6 +37,7 @@
   "dependencies": {
     "@trpc/client": "^10.14.0",
     "@trpc/server": "^10.14.0",
+    "lodash": "^4.17.21",
     "zod": "^3.20.6"
   }
 }

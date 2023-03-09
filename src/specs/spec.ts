@@ -4,28 +4,31 @@ import { TypeScheme } from './scheme';
 const Spec_Payload = z.object({
     id: z.string(),
     name: z.string(),
-    uint: z.string().optional(),
+    suffix: z.string().optional(),
     description: z.string().optional(),
     placeholder: z.string().optional(),
+    suggestion: z.enum(['full', 'partial']).optional(),
     readOnly: z.boolean().optional(),
-    required: z.boolean().optional(),
     typeScheme: TypeScheme
 });
 
 const Spec_Payloads = Spec_Payload.array();
 
 const EntityCommand_Delete = z.object({
-    id: z.enum(['delete'])
+    id: z.enum(['delete']),
+    endpoints: z.string().optional(),
 });
 
 const EntityCommand_Update = z.object({
     id: z.enum(['update']),
+    endpoints: z.string().optional(),
     score: z.string()
 });
 
 const EntityCommand_Execute = z.object({
     id: z.enum(['execute']),
     name: z.string(),
+    endpoints: z.string().optional(),
     function: z.string().optional(),
     payloads: Spec_Payloads
 });
@@ -34,29 +37,38 @@ const Spec_EntityCommand = EntityCommand_Delete.or(EntityCommand_Update).or(Enti
 
 const EntityGlobalCommand_Create = z.object({
     id: z.enum(['create']),
+    endpoints: z.string().optional(),
     payloads: Spec_Payload.array()
 });
 
 const EntityGlobalCommand_Execute = z.object({
     id: z.enum(['execute']),
     name: z.string(),
+    endpoints: z.string().optional(),
     function: z.string().optional(),
     payloads: Spec_Payload.array()
 });
 
 const Spec_EntityGlobalCommand = EntityGlobalCommand_Create.and(EntityGlobalCommand_Execute);
 
-const Spec_EntitySectionDefinition = z.object({
+const Spec_EntitySection = z.object({
     id: z.string(),
     name: z.string(),
     payloads: Spec_Payload.array()
 });
 
-const Spec_EntityDefinition = z.object({
+const Spec_Entity = z.object({
+    name: z.string(),
     singleton: z.boolean().optional(),
     globalCommands: Spec_EntityGlobalCommand.array(),
     commands: Spec_EntityCommand.array(),
-    sections: Spec_EntitySectionDefinition.array(),
+    sections: Spec_EntitySection.array(),
+    endpoints: z.record(
+        z.string(),
+        z.object({
+            name: z.string(),
+        }),
+    ).optional(),
     display: z.object({
         list: z.object({
             columns: z.object({
@@ -76,20 +88,18 @@ const Spec_EntityDefinition = z.object({
     }).optional()
 });
 
-const Spec_EntityEndPoint = z.object({
-    name: z.string(),
-    entity: z.string()
-});
-
 type _MenuItem = {
     name: string;
     items: _MenuItem[];
-    endpoint?: string;
+    endpoint?: { entity: string; endpoint?: string; }
 };
 
 const Spec_MenuItem: z.ZodType<_MenuItem> = z.object({
     name: z.string(),
-    entity: z.string().optional(),
+    endpoints: z.object({
+        entity: z.string(),
+        endpoint: z.string().optional(),
+    }).optional(),
     items: z.lazy(() => Spec_MenuItem.array()),
 });
 
@@ -98,21 +108,16 @@ export const Spec_Root = z.object({
     name: z.string(),
     authentication: z.enum(['none', 'basic', 'baerer']),
     menuItems: Spec_MenuItem.array(),
-    endpoints: z.record(
-        z.string(),
-        Spec_EntityEndPoint,
-    ),
     entities: z.record(
         z.string(),
-        Spec_EntityDefinition
+        Spec_Entity
     ),
 });
 
 export type Spec_Root = z.infer<typeof Spec_Root>;
 export type Spec_MenuItem = z.infer<typeof Spec_MenuItem>;
-export type Spec_EntityEndPoint = z.infer<typeof Spec_EntityEndPoint>;
-export type Spec_EntityDefinition = z.infer<typeof Spec_EntityDefinition>;
-export type Spec_EntitySectionDefinition = z.infer<typeof Spec_EntitySectionDefinition>;
+export type Spec_Entity = z.infer<typeof Spec_Entity>;
+export type Spec_EntitySection = z.infer<typeof Spec_EntitySection>;
 export type Spec_EntityGlobalCommand = z.infer<typeof Spec_EntityGlobalCommand>;
 export type Spec_EntityCommand = z.infer<typeof Spec_EntityCommand>;
 export type Spec_Payload = z.infer<typeof Spec_Payload>;

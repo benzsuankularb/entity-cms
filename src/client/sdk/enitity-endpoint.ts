@@ -1,20 +1,27 @@
-import * as Spec from '../../specs';
+import { Spec_Entity } from '../../specs';
 import { EntityGlobalCommand } from './command';
 import { EntityCMSContext } from "./common";
 import { Entity } from './entity';
 import { EntityList } from "./entity-list";
 
+export interface EntityEndPointOptions {
+    context: EntityCMSContext;
+    entitySpec: Spec_Entity;
+    endpoint?: string;
+}
 
 export class EntityEndPoint {
     private context: EntityCMSContext;
-    readonly id: string = '';
+    readonly entitySpec: Spec_Entity;
+    readonly endpoint?: string;
     readonly name: string = '';
-    readonly entityId: string = '';
     readonly singleton: boolean = true;
     readonly globalCommands: EntityGlobalCommand[] = [];
 
-    constructor(options: { context: EntityCMSContext; endpointSpec: Spec.Spec_EntityEndPoint; entityDefSpec: Spec.Spec_EntityDefinition; }) {
+    constructor(options: EntityEndPointOptions) {
         this.context = options.context;
+        this.entitySpec = options.entitySpec;
+        this.endpoint = options.endpoint;
     }
 
     getList(): EntityList {

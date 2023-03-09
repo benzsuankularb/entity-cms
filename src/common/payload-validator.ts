@@ -3,37 +3,30 @@ import * as z from "zod";
 import * as spec from "../specs";
 import { TypeScheme } from "../specs";
 
+export type ValidatePayloadsFunction = (payloads: { [id: string]: unknown }) => [invalidIds: string[]];
 
-type ValidatorFunc = (value: unknown) => boolean;
-
-export function createPayloadsValidator(payloadsSpec: spec.Spec_Payloads) {
-    const typeValidators: { [id: string]: ValidatorFunc } = {};
+export function createPayloadsValidator(payloadsSpec: spec.Spec_Payloads): ValidatePayloadsFunction {
+    const typeValidators: { [id: string]: (value: any) => boolean } = {};
     payloadsSpec.forEach(spec => typeValidators[spec.id] = createTypeValidator(spec.typeScheme));
     
-    const validateField = (id: string, value: unknown) => {
+    const validateField = (payloads: {[id: string]: unknown}, id: string) => {
         const typeValidator = typeValidators[id];
         if (!typeValidator) {
             return false;
         }
         
+        const value = payloads[id];
         if (!typeValidator(value)) {
             return false;
         }
+        
         return true;
     }
 
-    const validate = (payloads: {[id: string]: unknown}) => {
-        for (const payloadId of Object.keys(payloads)) {
-            validateField(payloadId, payloads[payloadId]);
-        }
-        return true;
+    return (payloads: {[id: string]: unknown}) => {
+        const invalidIds = Object.keys(payloads).filter(payloadId => !validateField(payloads, payloadId));
+        return [invalidIds];
     };
-
-    
-    return {
-        validate,
-        validateField
-    }
 }
 
 function createTypeValidator(typeScheme: TypeScheme) {
@@ -73,7 +66,7 @@ function createZod(typeScheme: TypeScheme): z.ZodType {
         return _zod;
     } else if (typeScheme.type === 'date') {
         return z.number();
-    } else if (typeScheme.type === 'bool') {
+    } else if (typeScheme.type === 'boolean') {
         return z.boolean();
     } else if (typeScheme.type === 'binary') {
         return z.string();

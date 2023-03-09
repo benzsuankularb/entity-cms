@@ -9,6 +9,7 @@ const TypeScheme_String: z.ZodType<TypeScheme_String> = z.object({
     max: z.number().int().optional(),
     multiline: z.boolean(),
     enum: z.string().array(),
+    required: z.boolean(),
 });
 
 export type TypeScheme_Number = { type: 'number', min?: number, max?: number, decimals?: number };
@@ -33,9 +34,9 @@ const TypeScheme_Date: z.ZodType<TypeScheme_Date> = z.object({
     type: z.enum(['date']),
 });
 
-export type TypeScheme_Boolean = { type: 'bool' };
+export type TypeScheme_Boolean = { type: 'boolean' };
 const TypeScheme_Boolean: z.ZodType<TypeScheme_Boolean> = z.object({
-    type: z.enum(['bool']),
+    type: z.enum(['boolean']),
 });
 
 export type TypeScheme_Array = { type: 'array', typeScheme: TypeScheme };

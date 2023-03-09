@@ -1,55 +1,87 @@
+import { z } from "zod";
 
 
 export interface SpecBuilderOptions {
     name: string,
 }
 
-export interface SpecBuilder {
-    auth(auth: SpecBuilder_Authentication): this;
-    menu(root: SpecBuilder_MenuItem): this;
-    binary(id: string): this;
-    entity(entity: SpecBuilder_Entity<unknown>): this;
+export interface SpecBuilder<TRequestContext> {
+    auth(auth: SpecBuilder_Authentication<TRequestContext>): this;
+    menu(root: SpecBuilder_MenuItem<TRequestContext>): this;
+    binary(id: SpecBuilder_Binary<TRequestContext>): this;
+    entity(entity: SpecBuilder_Entity<TRequestContext, TEntity>): this;
 }
 
-export interface SpecBuilder_AuthenticationOptions {
+export interface SpecBuilder_AuthenticationOptions<TRequestContext> {
     
 }
 
-export interface SpecBuilder_Authentication {
+export interface SpecBuilder_Authentication<TRequestContext> {
     name: string,
 }
 
-export interface SpecBuilder_MenuItemOptions {
+export interface SpecBuilder_MenuItemOptions<TRequestContext> {
     endpoint?: string;
 }
 
-export interface SpecBuilder_MenuItem {
-    submenu(item: SpecBuilder_MenuItem): this;
+export interface SpecBuilder_MenuItem<TRequestContext> {
+    submenu(item: SpecBuilder_MenuItem<TRequestContext>): this;
 }
 
-export interface SpecBuilder_Entity<T> {
+export interface SpecBuilder_EntityOptions<TRequestContext, TEntity> {
+    type: z.ZodType;
+}
+
+export interface SpecBuilder_Entity<TRequestContext, TEntity> {
     section(): this;
     command(): this;
     endpoint(): this;
 }
 
-interface SpecBuilder_BinaryOptions {
+export interface SpecBuilder_BinaryOptions<TRequestContext> {
     storage: string;
     mimeType: string;
 }
 
-export class SpecBuilder_Binary {
+export class SpecBuilder_Binary<TRequestContext> {
     
 }
 
-export default {
-    server: (options: SpecBuilderOptions) => SpecBuilder;
-    menu: (options: SpecBuilder_MenuItemOptions) => SpecBuilder_MenuItem;
-    binary: (options: SpecBuilder_BinaryOptions) => SpecBuilder_Binary;
-    auth: (options: SpecBuilder_AuthenticationOptions) => SpecBuilder_Authentication;
-    entity: (options: SpecBuilder_EntityOptions) => SpecBuilder_Entity;
-    entitySection: (options: SpecBuilder_EntitySectionOptions) => SpecBuilder_EntitySection;
-    entityCommand: (options: SpecBuilder_EntityCommandOptions) => SpecBuilder_EntityCommand;
-    entityGlobalCommand: (options: SpecBuilder_EntityGlobalCommandOptions) => SpecBuilder_EntityGlobalCommand;
-    entityEndPoint: (options: SpecBuilder_EntityEndPointOptions) => SpecBuilder_EntityEndPoint;
+export class SpecBuilderContext<TRequestContext> {
+    init(options: SpecBuilderOptions<TRequestContext>): SpecBuilder<TRequestContext> {
+        throw ''
+    }
+
+    menu: (options: SpecBuilder_MenuItemOptions<TRequestContext>): SpecBuilder_MenuItem<TRequestContext> {
+        throw ''
+    }
+
+    binary: (options: SpecBuilder_BinaryOptions<TRequestContext>): SpecBuilder_Binary<TRequestContext> {
+        throw ''
+    }
+
+    auth: (options: SpecBuilder_AuthenticationOptions<TRequestContext>): SpecBuilder_Authentication<TRequestContext> {
+        throw ''
+    }
+
+    entity: (options: SpecBuilder_EntityOptions<TRequestContext>): SpecBuilder_Entity<TRequestContext> {
+        throw ''
+    }
+
+    entitySection: (options: SpecBuilder_EntitySectionOptions<TRequestContext>): SpecBuilder_EntitySection<TRequestContext> {
+        throw ''
+    }
+
+    entityCommand: (options: SpecBuilder_EntityCommandOptions<TRequestContext>): SpecBuilder_EntityCommand<TRequestContext> {
+        throw ''
+    }
+
+    entityGlobalCommand: (options: SpecBuilder_EntityGlobalCommandOptions<TRequestContext>): SpecBuilder_EntityGlobalCommand<TRequestContext> {
+        throw ''
+    }
+
+    entityEndPoint: (options: SpecBuilder_EntityEndPointOptions<TRequestContext>): SpecBuilder_EntityEndPoint<TRequestContext> {
+        throw ''
+    }
+
 }

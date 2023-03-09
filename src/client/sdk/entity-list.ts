@@ -1,3 +1,4 @@
+import { EventEmitter } from 'stream';
 import * as Spec from '../../specs';
 import { EntityCMSContext } from "./common";
 
@@ -18,20 +19,38 @@ export interface EntityList_FetchOptions {
 }
 
 export interface EntityList_Column {
+    field: string;
     name: string;
     type: Spec.TypeScheme;
 }
 
+export interface EntityListOptions {
+    context: EntityCMSContext;
+    entityId: string;
+    endpoint?: string;
+    columns: EntityList_Column[];
+}
+
 export class EntityList {
     private context: EntityCMSContext;
-    readonly columns: { field: string; name: string; type: Spec.TypeScheme; }[];
-    declare onUpdate: () => void | null;
-    declare total: number;
-    declare items: ListEntity[]
+    private entityId: string;
+    private endpoint?: string;
 
-    constructor(options: { context: EntityCMSContext; }) {
+    readonly onUpdated: EventEmitter;
+    readonly columns: EntityList_Column[];
+
+    total: number;
+    items: ListEntity[];
+
+    constructor(options: EntityListOptions) {
+        this.onUpdated = new EventEmitter();
         this.context = options.context;
-        this.columns = [];
+        this.entityId = options.entityId;
+        this.endpoint = options.endpoint;
+        this.columns = options.columns;
+        
+        this.total = 0;
+        this.items = [];
     }
 
     async fetch(options: EntityList_FetchOptions): Promise<void> {
