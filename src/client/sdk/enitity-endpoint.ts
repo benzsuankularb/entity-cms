@@ -1,5 +1,5 @@
 import { Spec_Entity } from '../../specs';
-import { EntityGlobalCommand } from './command';
+import { EntityList_Command } from './command';
 import { EntityCMSContext } from "./common";
 import { Entity } from './entity';
 import { EntityList } from "./entity-list";
@@ -16,7 +16,7 @@ export class EntityEndPoint {
     readonly endpoint?: string;
     readonly name: string = '';
     readonly singleton: boolean = true;
-    readonly globalCommands: EntityGlobalCommand[] = [];
+    readonly globalCommands: EntityList_Command[] = [];
 
     constructor(options: EntityEndPointOptions) {
         this.context = options.context;
@@ -24,7 +24,7 @@ export class EntityEndPoint {
         this.endpoint = options.endpoint;
     }
 
-    getList(): EntityList {
+    async getList(): Promise<EntityList> {
         throw "";
     }
 

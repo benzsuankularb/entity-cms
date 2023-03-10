@@ -21,7 +21,8 @@ const createContext = ({
     return {
         req,
         res,
-        entityEndpointHandler
+        entityEndpointHandler,
+        binaryHandler
     }
 };
 

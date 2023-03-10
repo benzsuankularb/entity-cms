@@ -1,5 +1,20 @@
 import * as z from 'zod';
 
+// export type TypeSchemeType<T extends TypeScheme> = T extends TypeScheme_Array ? TypeSchemeType<T['typeScheme']> : _TypeSchemeTypes[T['type']];
+export type TypeSchemeType<T extends TypeScheme> = _TypeSchemeTypes[T['type']];
+
+type _TypeSchemeTypes = {
+    string: string;
+    number: number,
+    integer: number;
+    date: number;
+    boolean: boolean;
+    entity: string,
+    binary: string;
+    array: never;
+    object: never;
+}
+
 export type TypeScheme_String = { type: 'string', format?: 'email' | 'url', regex?: string, min?: number, max?: number, enum?: string[] };
 const TypeScheme_String: z.ZodType<TypeScheme_String> = z.object({
     type: z.enum(['string']),
@@ -42,7 +57,7 @@ const TypeScheme_Boolean: z.ZodType<TypeScheme_Boolean> = z.object({
 export type TypeScheme_Array = { type: 'array', typeScheme: TypeScheme };
 const TypeScheme_Array: z.ZodType<TypeScheme_Array> = z.object({
     type: z.enum(['array']),
-    typeScheme: z.lazy(() => TypeScheme),
+    typeScheme: z.lazy(() => NoNestedTypeScheme),
 });
 
 export type TypeScheme_Object = { type: 'object', typeSchemes: { [key: string]: TypeScheme } };
@@ -50,7 +65,7 @@ const TypeScheme_Object: z.ZodType<TypeScheme_Object> = z.object({
     type: z.enum(['object']),
     typeSchemes: z.record(
         z.string(),
-        z.lazy(() => TypeScheme),
+        z.lazy(() => NoNestedTypeScheme),
     ),
 });
 
@@ -66,6 +81,14 @@ const TypeScheme_Entity: z.ZodType<TypeScheme_Entity> = z.object({
     type: z.enum(['entity']),
     entity: z.string(),
 });
+
+const NoNestedTypeScheme = TypeScheme_String
+    .or(TypeScheme_Number)
+    .or(TypeScheme_Integer)
+    .or(TypeScheme_Date)
+    .or(TypeScheme_Boolean)
+    .or(TypeScheme_Binary)
+    .or(TypeScheme_Entity);
 
 export const TypeScheme = TypeScheme_String
     .or(TypeScheme_Number)

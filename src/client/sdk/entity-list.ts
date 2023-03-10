@@ -1,14 +1,8 @@
 import { EventEmitter } from 'stream';
 import * as Spec from '../../specs';
+import { EntityList_Command } from './command';
 import { EntityCMSContext } from "./common";
-
-export interface ListEntity {
-    id: string;
-    created?: number | boolean;
-    deleted?: number | boolean;
-    columnDatas: unknown[];
-    commands: { name: string; command: string; scope?: string; }[];
-}
+import { ReadEntity } from './entity';
 
 export interface EntityList_FetchOptions {
     limit?: number;
@@ -38,9 +32,10 @@ export class EntityList {
 
     readonly onUpdated: EventEmitter;
     readonly columns: EntityList_Column[];
-
+    readonly commands: EntityList_Command[];
+    
     total: number;
-    items: ListEntity[];
+    items: ReadEntity[];
 
     constructor(options: EntityListOptions) {
         this.onUpdated = new EventEmitter();

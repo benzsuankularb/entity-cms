@@ -2,7 +2,8 @@ import * as _ from 'lodash';
 import { TypeScheme } from "../../specs";
 import { EventEmitter } from "../utils/event";
 import { DeepReadonly } from "../utils/types";
-import { EmbededEntity, EntityCMSContext } from "./common";
+import { EntityCMSContext } from "./common";
+import { ReadEntity } from './entity';
 import { PayloadsInternal } from "./payloads";
 
 export interface PayloadField<T> {
@@ -36,9 +37,9 @@ export interface PayloadField_Binary extends PayloadField<string> {
 }
 
 export interface PayloadField_Entity extends PayloadField<string>  {
-    readonly valueEmbededEntity: EmbededEntity;
-    getEmbededEntity(id: string): EmbededEntity | undefined;
-    suggest(): Promise<EmbededEntity[]>;
+    readonly valueReadEntity: ReadEntity;
+    update(entityId: string): Promise<void>;
+    suggest(): Promise<ReadEntity[]>;
 }
 
 export interface PayloadFieldMeta {
@@ -192,23 +193,23 @@ export class PayloadFieldInternal_Binary extends PayloadFieldInternal<string> im
 
 export class PayloadFieldInternal_Entity extends PayloadFieldInternal<string> implements PayloadField_Entity {
 
-    embededEntities: { [id: string]: EmbededEntity };
-    valueEmbededEntity: EmbededEntity;
+    embededEntities: { [id: string]: ReadEntity };
+    valueReadEntity: ReadEntity;
 
-    constructor(options: PayloadFieldInternalOptions<string> & { initialValue: EmbededEntity }) {
+    constructor(options: PayloadFieldInternalOptions<string> & { initialValue: ReadEntity }) {
         super({
             ...options,
             initialValue: options.initialValue.id
         });
-        this.valueEmbededEntity = options.initialValue;
+        this.valueReadEntity = options.initialValue;
         this.embededEntities = {};
     }
 
-    getEmbededEntity(id: string): EmbededEntity | undefined {
-        return this.embededEntities[id];
+    async update(entityId: string): Promise<void> {
+        this.setValue(entityId);
     }
     
-    suggest(): Promise<EmbededEntity[]> {
+    suggest(): Promise<ReadEntity[]> {
         throw new Error('Method not implemented.');
     }
 }

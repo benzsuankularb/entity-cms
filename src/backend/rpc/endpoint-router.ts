@@ -1,16 +1,16 @@
 import { t } from "./context";
-import { ExecuteCommandOptions, ExecuteCreateCommandOptions, ExecuteGlobalCommandOptions, GetOptions, ListOptions, SuggestCommandInputOptions, SuggestGlobalCommandInputOptions } from "./endpoint-handler";
+import { ExecuteCommandOptions, ExecuteCreateCommandOptions, ExecuteListCommandOptions, GetWriteEntityOptions, QueryReadEntitiesOptions, SuggestCommandInputOptions, SuggestListCommandInputOptions } from "./endpoint-handler";
 
 export const entityEndpointRouter = t.router({
-    list: t.procedure
-        .input(ListOptions)
+    queryReadEntities: t.procedure
+        .input(QueryReadEntitiesOptions)
         .query(async ({ input, ctx }) => {
-            return ctx.entityEndpointHandler.list(input);
+            return ctx.entityEndpointHandler.queryReadEntities(input);
         }),
-    get: t.procedure
-        .input(GetOptions)
+    getWriteEntity: t.procedure
+        .input(GetWriteEntityOptions)
         .query(({ input, ctx }) => {
-            return ctx.entityEndpointHandler.get(input);
+            return ctx.entityEndpointHandler.getWriteEntity(input);
         }),
     executeCommand: t.procedure
         .input(ExecuteCommandOptions)
@@ -27,15 +27,15 @@ export const entityEndpointRouter = t.router({
         .mutation(({ input, ctx }) => {
             return ctx.entityEndpointHandler.executeCreateCommand(input);
         }),
-    executeGlobalCommand: t.procedure
-        .input(ExecuteGlobalCommandOptions)
+    executeListCommand: t.procedure
+        .input(ExecuteListCommandOptions)
         .mutation(({ input, ctx }) => {
-            return ctx.entityEndpointHandler.executeGlobalCommand(input);
+            return ctx.entityEndpointHandler.executeListCommand(input);
         }),
-    suggestGlobalCommandInput: t.procedure
-        .input(SuggestGlobalCommandInputOptions)
+    suggestListCommandInput: t.procedure
+        .input(SuggestListCommandInputOptions)
         .query(({ input, ctx }) => {
-            return ctx.entityEndpointHandler.suggestGlobalCommandInput(input);
+            return ctx.entityEndpointHandler.suggestListCommandInput(input);
         })
 });
 

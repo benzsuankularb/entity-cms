@@ -1,6 +1,6 @@
 import { Payloads } from "./payloads";
 
-export interface EntitySection {
+export interface Entity_Section {
     id: string;
     name: string;
     payloads: Payloads;
@@ -8,7 +8,8 @@ export interface EntitySection {
     update(): Promise<void>;
 }
 
-export interface EntityGlobalCommand {
+export interface Entity_Command {
+    entityId: string;
     command: string;
     scope: string;
     name: string;
@@ -16,8 +17,7 @@ export interface EntityGlobalCommand {
     execute(): Promise<void>;
 }
 
-export interface EntityCommand {
-    entityId: string;
+export interface EntityList_Command {
     command: string;
     scope: string;
     name: string;

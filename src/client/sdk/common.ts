@@ -11,9 +11,3 @@ export class EntityCMSContext {
         this.functions = {};
     }
 }
-
-export interface EmbededEntity {
-    entity: string;
-    id: string;
-    display: string;
-}

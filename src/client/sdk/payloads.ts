@@ -1,7 +1,8 @@
 import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payload-validator';
-import * as Spec from '../../specs';
+import { Spec_WritePayload } from '../../specs';
 import { EventEmitter } from "../utils/event";
-import { EmbededEntity, EntityCMSContext } from "./common";
+import { EntityCMSContext } from "./common";
+import { ReadEntity } from './entity';
 import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload';
 
 export interface Payloads {
@@ -13,19 +14,19 @@ export interface Payloads {
 export interface PayloadsInternalOptions {
     context: EntityCMSContext;
     data: {[id: string]: unknown};
-    embededEntities: { [entity: string]: EmbededEntity };
-    spec: Spec.Spec_Payloads;
+    listEntities: { [entity: string]: ReadEntity };
+    fieldSpecs: Spec_WritePayload[];
 }
 
 export class PayloadsInternal implements Payloads {
     readonly onValidatedUpdated: EventEmitter;
-    private _fieldSpecs: Spec.Spec_Payload[];
+    private _fieldSpecs: Spec_WritePayload[];
     private _fields: { [id: string]: PayloadFieldInternal<unknown> };
     private _validatePayloads: ValidatePayloadsFunction;
     validated: boolean;
 
     constructor(options: PayloadsInternalOptions) {
-        this._fieldSpecs = options.spec;
+        this._fieldSpecs = options.fieldSpecs;
         this.onValidatedUpdated = new EventEmitter();
         this._validatePayloads = createPayloadsValidator(this._fieldSpecs);
         this.validated = false;

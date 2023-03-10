@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as z from "zod";
-import * as spec from "../specs";
-import { TypeScheme } from "../specs";
+import { Spec_WritePayload, TypeScheme } from "../specs";
 
 export type ValidatePayloadsFunction = (payloads: { [id: string]: unknown }) => [invalidIds: string[]];
 
-export function createPayloadsValidator(payloadsSpec: spec.Spec_Payloads): ValidatePayloadsFunction {
+export function createPayloadsValidator(payloadFieldSpecs: Spec_WritePayload[]): ValidatePayloadsFunction {
     const typeValidators: { [id: string]: (value: any) => boolean } = {};
-    payloadsSpec.forEach(spec => typeValidators[spec.id] = createTypeValidator(spec.typeScheme));
+    payloadFieldSpecs.forEach(spec => typeValidators[spec.id] = createTypeValidator(spec.typeScheme));
     
     const validateField = (payloads: {[id: string]: unknown}, id: string) => {
         const typeValidator = typeValidators[id];
