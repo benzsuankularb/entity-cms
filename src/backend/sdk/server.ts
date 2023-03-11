@@ -1,65 +1,51 @@
-import { entity, EntitySection, entitySection, WritePayload, writePayload, WritePayloads } from "./entity-spec-builders";
+import { SpecBuilder_Entity, SpecBuilder_EntitySection, SpecBuilder_MenuItem, SpecBuilder_Spec, SpecBuilder_WritePayload } from "./spec-builders";
 
-const x = entity({
-    name: '',
-    entity: {
-        section: entitySection({
-            name: ''
-        }).payloads({
-            some: writePayload({
-                name: '',
-                description: '',
-                suffix: ''
-            }).typeScheme({ type: 'string'})
-        })
-    }
-})
-
-// type xx = typeof x
-
-const a = entitySection({
-    name: ''
-}).payloads({
-    some: writePayload({
-        name: '',
-        description: '',
-        suffix: ''
-    }).typeScheme({ type: 'string'}),
-    thing: writePayload({
-        name: '',
-        description: '',
-        suffix: ''
-    }).typeScheme({ type: 'number'})
-});
-
-type a = EntitySection<typeof a>;
-
-///
-
-const z = {
-    some: writePayload({
-        name: '',
-        description: '',
-        suffix: ''
-    }).typeScheme({ type: 'string'}),
-    thing: writePayload({
-        name: '',
-        description: '',
-        suffix: ''
-    }).typeScheme({ type: 'number'})
-};
-
-type z = WritePayloads<typeof z>
-
-
-
-
-///
-
-const b = writePayload({
-    name: '',
-    description: '',
-    suffix: ''
-}).typeScheme({ type: 'string'});
-
-type b = WritePayload<typeof b>;
+const x = SpecBuilder_Spec.create()
+    .entity(
+        SpecBuilder_Entity
+            .create('entity1')
+            .sections({
+                section1: SpecBuilder_EntitySection.create()
+                    .payloads({
+                        payload1: SpecBuilder_WritePayload
+                            .create()
+                            .name('Payload1'),
+                        payload2: SpecBuilder_WritePayload
+                            .create()
+                    })
+            })
+    )
+    .entity(
+        SpecBuilder_Entity
+            .create('entity1')
+            .sections({
+                section1: SpecBuilder_EntitySection.create()
+                    .payloads({
+                        payload1: SpecBuilder_WritePayload
+                            .create()
+                            .name('Payload1'),
+                        payload2: SpecBuilder_WritePayload
+                            .create()
+                    })
+            })
+            .actions(
+                
+            )
+    )
+    .menu(
+        SpecBuilder_MenuItem
+            .create()
+            .name('something')
+            .item(
+                SpecBuilder_MenuItem
+                    .create()
+                    .name('something')
+                    .endpoint('something')
+            )
+            .item(
+                SpecBuilder_MenuItem
+                    .create()
+                    .name('something')
+                    .endpoint('entity')
+            )
+    )

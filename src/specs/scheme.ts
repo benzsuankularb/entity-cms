@@ -1,7 +1,7 @@
 import * as z from 'zod';
 
 // export type TypeSchemeType<T extends TypeScheme> = T extends TypeScheme_Array ? TypeSchemeType<T['typeScheme']> : _TypeSchemeTypes[T['type']];
-export type TypeSchemeType<T extends TypeScheme> = _TypeSchemeTypes[T['type']];
+export type InferTypeScheme<T extends TypeScheme> = _TypeSchemeTypes[T['type']];
 
 type _TypeSchemeTypes = {
     string: string;
