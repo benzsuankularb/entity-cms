@@ -48,13 +48,13 @@ const Spec_Entity_Section = z.object({
 });
 
 const Spec_GlobalCommand_Create = z.object({
-    id: z.enum(['create']),
+    command: z.enum(['create']),
     endpoints: z.string().optional(),
     payloads: Spec_WritePayload.array()
 });
 
 const Spec_GlobalCommand_Execute = z.object({
-    id: z.enum(['execute']),
+    command: z.enum(['execute']),
     action: z.string(),
     name: z.string(),
     endpoints: z.string().optional(),

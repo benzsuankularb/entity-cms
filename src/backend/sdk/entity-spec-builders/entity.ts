@@ -1,5 +1,5 @@
 import { Spec_Entity } from "../../../specs";
-import { EntityAction } from "./entity-action";
+import { EntityAction } from "./entity-actions/entity-action";
 import { EntitySectionBuilder } from "./entity-section";
 import { ReadPayloadBuilder } from "./read-payload";
 
