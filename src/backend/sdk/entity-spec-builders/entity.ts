@@ -10,7 +10,7 @@ export type Entity<T extends EntityBuilder<unknown, unknown, unknown>> = T exten
 
 export type ReadEntity<T extends EntityBuilder<unknown, unknown, unknown>> = T extends EntityBuilder<unknown, unknown, infer U> ? U: never;
 
-type EntitySectionBuilders = { [section: string]: EntitySectionBuilder<unknown> };
+type EntitySectionBuilders = { [section: string]: EntitySectionBuilder<unknown, never> };
 
 export type EntitySections<T extends EntitySectionBuilders> = {
     [I in keyof T]: T[I]

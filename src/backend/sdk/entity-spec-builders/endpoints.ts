@@ -6,12 +6,12 @@ export class EndPoints<_TBase, T extends _TBase> {
     
     _endpoints: Set<T>;
 
-    constructor() {
-        this._endpoints = new Set();
+    constructor(val: T) {
+        this._endpoints = new Set([val]);
     }
 
-    static create<_TBase extends string>(): EndPoints<_TBase, never> {
-        return new EndPoints<_TBase, never>();
+    static create<_TBase extends string, _T extends _TBase>(val: _T): EndPoints<_TBase, _T> {
+        return new EndPoints<_TBase, _T>(val);
     }
     
     and<_T extends _TBase>(endpoint: _T): EndPoints<_TBase, _T | T> {

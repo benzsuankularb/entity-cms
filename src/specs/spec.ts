@@ -64,6 +64,16 @@ const Spec_GlobalCommand_Execute = z.object({
 
 const Spec_GlobalCommand = Spec_GlobalCommand_Create.and(Spec_GlobalCommand_Execute);
 
+const Spec_ReadEntityQuery = z.object({
+    name: z.string(),
+    filters: z.object({
+        field: z.string(),
+        lowest: z.any().optional(),
+        higest: z.any().optional(),
+        allowRange: z.boolean().optional()
+    }).array(),
+});
+
 const Spec_Entity = z.object({
     name: z.string(),
     singleton: z.boolean().optional(),
@@ -85,14 +95,7 @@ const Spec_Entity = z.object({
     }),
     commands: Spec_EntityCommand.array(),
     globalCommands: Spec_GlobalCommand.array(),
-    query: z.object({
-        filters: z.object({
-            field: z.string(),
-            lowest: z.any().optional(),
-            higest: z.any().optional(),
-            allowRange: z.boolean().optional()
-        }).array(),
-    }).optional(),
+    query: Spec_ReadEntityQuery.array().optional(),
 });
 
 type _MenuItem = {
@@ -126,6 +129,7 @@ export type Spec_MenuItem = z.infer<typeof Spec_MenuItem>;
 export type Spec_WritePayload = z.infer<typeof Spec_WritePayload>;
 export type Spec_ReadPayload = z.infer<typeof Spec_ReadPayload>;
 export type Spec_Entity = z.infer<typeof Spec_Entity>;
+export type Spec_ReadEntityQuery = z.infer<typeof Spec_ReadEntityQuery>;
 export type Spec_Entity_Section = z.infer<typeof Spec_Entity_Section>;
 export type Spec_EntityCommand = z.infer<typeof Spec_EntityCommand>;
 export type Spec_GlobalCommand = z.infer<typeof Spec_GlobalCommand>;
