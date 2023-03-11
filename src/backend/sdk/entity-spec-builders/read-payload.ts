@@ -6,19 +6,19 @@ export type ReadPayloads<T extends { [section: string]: ReadPayloadBuilder<never
 
 export type ReadPayload<T extends ReadPayloadBuilder<unknown>> = T  extends ReadPayloadBuilder<infer U > ? U: never;
 
-export function readPayload(options: ReadPayloadOptions) {
-    return new ReadPayloadBuilder(options);
-}
-
-interface ReadPayloadOptions {
-    name: string;
-}
-
 export class ReadPayloadBuilder<TValue> {
     _spec: Partial<Spec_ReadPayload>;
     
-    constructor(options: ReadPayloadOptions) {
-        this._spec = { ...options }
+    private constructor() {
+        this._spec = { }
+    }
+
+    static create() {
+        return new ReadPayloadBuilder();
+    }
+
+    name(val: string) {
+        this._spec.name = val;
     }
 
     typeScheme<T extends { type: TValue } & TypeScheme>(value: T): ReadPayloadBuilder<TypeSchemeType<T>> {

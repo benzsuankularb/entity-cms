@@ -18,26 +18,28 @@ const Spec_ReadPayload = z.object({
     typeScheme: TypeScheme
 });
 
-const Spec_Entity_DeleteCommand = z.object({
-    id: z.enum(['delete']),
+const Spec_EntityCommand_Delete = z.object({
+    command: z.enum(['delete']),
     endpoints: z.string().optional(),
 });
 
-const Spec_Entity_UpdateCommand = z.object({
-    id: z.enum(['update']),
+const Spec_EntityCommand_Update = z.object({
+    command: z.enum(['update']),
+    section: z.string(),
     endpoints: z.string().optional(),
     score: z.string()
 });
 
-const Spec_Entity_ExecuteCommand = z.object({
-    id: z.enum(['execute']),
+const Spec_EntityCommand_Execute = z.object({
+    command: z.enum(['execute']),
+    action: z.string(),
     name: z.string(),
     endpoints: z.string().optional(),
     function: z.string().optional(),
     payloads: Spec_WritePayload.array(),
 });
 
-const Spec_Entity_Command = Spec_Entity_DeleteCommand.or(Spec_Entity_UpdateCommand).or(Spec_Entity_ExecuteCommand);
+const Spec_EntityCommand = Spec_EntityCommand_Delete.or(Spec_EntityCommand_Update).or(Spec_EntityCommand_Execute);
 
 const Spec_Entity_Section = z.object({
     id: z.string(),
@@ -45,49 +47,51 @@ const Spec_Entity_Section = z.object({
     payloads: Spec_WritePayload.array()
 });
 
-const Spec_EntityList_CreateCommand = z.object({
+const Spec_GlobalCommand_Create = z.object({
     id: z.enum(['create']),
     endpoints: z.string().optional(),
     payloads: Spec_WritePayload.array()
 });
 
-const Spec_EntityList_ExecuteCommand = z.object({
+const Spec_GlobalCommand_Execute = z.object({
     id: z.enum(['execute']),
+    action: z.string(),
     name: z.string(),
     endpoints: z.string().optional(),
     function: z.string().optional(),
     payloads: Spec_WritePayload.array()
 });
 
-const Spec_EntityList_Command = Spec_EntityList_CreateCommand.and(Spec_EntityList_ExecuteCommand);
-
-const Spec_EntityList_ItemDisplay = z.object({
-    fields: z.string().array(),
-    format: z.string(),
-});
+const Spec_GlobalCommand = Spec_GlobalCommand_Create.and(Spec_GlobalCommand_Execute);
 
 const Spec_Entity = z.object({
     name: z.string(),
-    single: z.object({
-        commands: Spec_Entity_Command.array(),
+    singleton: z.boolean().optional(),
+    endpoints: z.record(
+        z.string(),
+        z.object({
+            name: z.string(),
+        }),
+    ).optional(),
+    entity: z.object({
         sections: Spec_Entity_Section.array(),
-        endpoints: z.record(
-            z.string(),
-            z.object({
-                name: z.string(),
-            }),
-        ).optional(),
     }).optional(),
-    list: z.object({
-        commands: Spec_EntityList_Command.array(),
+    readEntity: z.object({
         payloads: Spec_ReadPayload.array(),
+        display: z.object({
+            fields: z.string().array(),
+            format: z.string(),
+        }),
+    }),
+    commands: Spec_EntityCommand.array(),
+    globalCommands: Spec_GlobalCommand.array(),
+    query: z.object({
         filters: z.object({
             field: z.string(),
             lowest: z.any().optional(),
             higest: z.any().optional(),
             allowRange: z.boolean().optional()
         }).array(),
-        itemDisplay: Spec_EntityList_ItemDisplay,
     }).optional(),
 });
 
@@ -123,6 +127,12 @@ export type Spec_WritePayload = z.infer<typeof Spec_WritePayload>;
 export type Spec_ReadPayload = z.infer<typeof Spec_ReadPayload>;
 export type Spec_Entity = z.infer<typeof Spec_Entity>;
 export type Spec_Entity_Section = z.infer<typeof Spec_Entity_Section>;
-export type Spec_Entity_Command = z.infer<typeof Spec_Entity_Command>;
-export type Spec_EntityList_Command = z.infer<typeof Spec_EntityList_Command>;
-export type Spec_EntityList_ItemDisplay = z.infer<typeof Spec_EntityList_ItemDisplay>;
+export type Spec_EntityCommand = z.infer<typeof Spec_EntityCommand>;
+export type Spec_GlobalCommand = z.infer<typeof Spec_GlobalCommand>;
+
+export type Spec_EntityCommand_Delete = z.infer<typeof Spec_EntityCommand_Delete>;
+export type Spec_EntityCommand_Update = z.infer<typeof Spec_EntityCommand_Update>;
+export type Spec_EntityCommand_Execute = z.infer<typeof Spec_EntityCommand_Execute>;
+
+export type Spec_GlobalCommand_Execute = z.infer<typeof Spec_GlobalCommand_Execute>;
+export type Spec_GlobalCommand_Create = z.infer<typeof Spec_GlobalCommand_Create>;

@@ -1,28 +1,29 @@
 import { Spec_Entity_Section } from "../../../specs";
-import { WritePayloadBuilder, WritePayloads } from "./write-payload";
+import { WritePayloadBuilders, WritePayloads } from "./write-payload";
 
 export type EntitySection<T extends EntitySectionBuilder<unknown>> = T  extends EntitySectionBuilder<infer U > ? U: never;
-
-export function entitySection(options: EntitySectionBuilderOptions) {
-    return new EntitySectionBuilder(options);
-}
-
-interface EntitySectionBuilderOptions {
-    name: string;
-}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class EntitySectionBuilder<_> {
 
     _spec: Partial<Spec_Entity_Section>;
-    _payloads: { [section: string]: WritePayloadBuilder<never> };
+    _payloads: WritePayloadBuilders;
     
-    constructor(options: EntitySectionBuilderOptions) {
-        this._spec = { ...options };
+    static create() {
+        return new EntitySectionBuilder();
+    }
+
+    private constructor() {
+        this._spec = {};
         this._payloads = {};
     }
 
-    payloads<T extends { [section: string]: WritePayloadBuilder<never> }>(payloadBuilders: T): EntitySectionBuilder<WritePayloads<T>> {
+    name(val: string): this {
+        this._spec.name = val;
+        return this;
+    }
+
+    payloads<T extends WritePayloadBuilders>(payloadBuilders: T): EntitySectionBuilder<WritePayloads<T>> {
         this._payloads = { ...payloadBuilders };
         return this as EntitySectionBuilder<WritePayloads<T>>;
     }
