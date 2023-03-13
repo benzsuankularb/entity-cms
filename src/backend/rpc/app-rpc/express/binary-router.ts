@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use(busboy());
 
-router.use('uploads/:bucket', (req, res) => {
+router.use('upload/:bucket', (req, res) => {
     const bucket = req.params.bucket;
     const binaryHandler = req.appRpc.binaryHandler;
     req.pipe(req.busboy);

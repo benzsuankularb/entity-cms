@@ -18,7 +18,7 @@ export class HttpBinaryRpc implements BinaryRpc {
     }
     
     async upload(options: UploadOptions): Promise<UploadResponse> {
-        const url = `${this._url}/${options.bucket}`;
+        const url = `${this._url}/upload/${options.bucket}`;
         //TODO request context auth
         
         const formData  = new FormData();
@@ -37,7 +37,7 @@ export class HttpBinaryRpc implements BinaryRpc {
     }
 
     async download(options: DownloadOptions): Promise<void> {
-        const url = `${this._url}/${options.bucket}/${options.id}`;
+        const url = `${this._url}/download/${options.bucket}/${options.id}`;
         //TODO request context auth
         
         try {
