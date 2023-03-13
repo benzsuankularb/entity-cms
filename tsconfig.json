@@ -25,6 +25,10 @@
     "declarationDir": "build/types",
     "emitDeclarationOnly": true
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/backend/sdk/.experiment.ts",
+    "src/backend/sdk/.experiment.ts"
+  ],
   "exclude": ["node_modules"]
 }

@@ -8,6 +8,7 @@ import { PayloadsInternal } from "./payloads";
 
 export interface PayloadField<T> {
     readonly onMetaUpdated: EventEmitter;
+    readonly onValidatedUpdated: EventEmitter;
     readonly onValueUpdated: EventEmitter;
     readonly id: string;
     readonly typeScheme: DeepReadonly<TypeScheme>;

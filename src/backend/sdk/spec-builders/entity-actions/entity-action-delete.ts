@@ -1,19 +1,19 @@
 import { MaybePromise } from "@trpc/server";
 import { Spec_EntityCommand_Delete } from "../../../../specs";
-import { SpecBuilderContextTypes } from "../context";
+import { EndPoint, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
 type SpecBuilder_EntityAction_Delete_HandleFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         entityId: string
     }) => MaybePromise<void>
 
 type SpecBuilder_EntityAction_Delete_AuthFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         entityId: string
     }) => MaybePromise<boolean>
 

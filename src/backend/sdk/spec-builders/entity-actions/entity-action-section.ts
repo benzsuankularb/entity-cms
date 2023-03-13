@@ -1,44 +1,44 @@
-import { MaybePromise } from "@trpc/server";
+import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_EntityCommand_Update } from "../../../../specs";
-import { SpecBuilderContextTypes } from "../context";
+import { EndPoint, EntitySection, EntitySections, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
-type EntityAction_Section_QueryFunc<T extends SpecBuilderContextTypes> =
+type EntityAction_Section_QueryFunc<T extends SpecBuilderContextTypes, TSection extends keyof EntitySections<T>> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         entityId: string 
-    }) => MaybePromise<T['_payloads']>
+    }) => MaybePromise<EntitySection<T, TSection>>
 
-type EntityAction_Section_MutateFunc<T extends SpecBuilderContextTypes> =
+type EntityAction_Section_MutateFunc<T extends SpecBuilderContextTypes, TSection extends keyof EntitySections<T>> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
-        payloads: T['_payloads']
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
+        payloads: EntitySection<T, TSection>,
         entityId: string,
-    }) => MaybePromise<T['_payloads']>
+    }) => MaybePromise<EntitySection<T, TSection>>
 
 type EntityAction_Section_AuthFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         entityId: string
     }) => MaybePromise<[query: boolean, mutate: boolean]>
 
-export class SpecBuilder_EntityAction_Section<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
+export class SpecBuilder_EntityAction_Section<TContext extends SpecBuilderContextTypes, TSection extends keyof EntitySections<TContext>> extends SpecBuilder_EntityAction<TContext> {
 
     _type = 'entity-action-section';
     _spec: Partial<Spec_EntityCommand_Update>;
     // _endpoints?: SpecBuilder_EndPoints<unknown, _TEndPoint>;
     _auth?: EntityAction_Section_AuthFunc<TContext>
-    _query?: EntityAction_Section_QueryFunc<TContext>;
-    _mutate?: EntityAction_Section_MutateFunc<TContext>;
+    _query?: EntityAction_Section_QueryFunc<TContext, TSection>;
+    _mutate?: EntityAction_Section_MutateFunc<TContext, TSection>;
 
-    constructor(section: string) {
+    constructor(section: keyof EntitySections<TContext>) {
         super();
         this._spec = {
             command: 'update',
-            section,
+            section: section as string,
         };
     }
     
@@ -53,12 +53,12 @@ export class SpecBuilder_EntityAction_Section<TContext extends SpecBuilderContex
         return this;
     }
 
-    query(handler: EntityAction_Section_QueryFunc<TContext>) {
+    query(handler: EntityAction_Section_QueryFunc<TContext, TSection>) {
         this._query = handler;
         return this;
     }
 
-    mutate(handler: EntityAction_Section_MutateFunc<TContext>) {
+    mutate(handler: EntityAction_Section_MutateFunc<TContext, TSection>) {
         this._mutate = handler;
         return this;
     }

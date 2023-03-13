@@ -1,17 +1,18 @@
-import { MaybePromise, SpecBuilderContextTypes } from "../context";
+import { MaybePromise } from "../../../../client/utils/types";
+import { EndPoint, ReadEntity, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
 type SpecBuilder_EntityAction_QueryByIds_HandleFunc<T extends SpecBuilderContextTypes> = (
     options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         ids: string[]
-    }) => MaybePromise<{ [id: string ]: T['_read_entity'] }>
+    }) => MaybePromise<{ [id: string ]: ReadEntity<T> }>
 
 type SpecBuilder_EntityAction_QueryByIds_AuthFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
     }) => MaybePromise<boolean>
 
 export class SpecBuilder_EntityAction_QueryByIds<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {

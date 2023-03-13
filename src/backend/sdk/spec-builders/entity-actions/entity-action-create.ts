@@ -1,19 +1,20 @@
+import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_GlobalCommand_Create } from "../../../../specs";
-import { MaybePromise, ReplaceField, SpecBuilderContextTypes } from "../context";
+import { EndPoint, Payloads, RequestContext, SetPayloads, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_WritePayloads, WritePayloads } from "../write-payload";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
-type SpecBuilder_EntityAction_Create_HandleFunc<TContext extends SpecBuilderContextTypes> =
+type SpecBuilder_EntityAction_Create_HandleFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: TContext['_request_context'],
-        endpoint?: TContext['_endpoint'],
-        payloads: TContext['_payloads']
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
+        payloads: Payloads<T>
     }) => MaybePromise<[entityId: string]>
 
-type SpecBuilder_EntityAction_Create_AuthFunc<TContext extends SpecBuilderContextTypes> =
+type SpecBuilder_EntityAction_Create_AuthFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: TContext['_request_context'],
-        endpoint?: TContext['_endpoint']
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
     }) => MaybePromise<boolean>
 
 export class SpecBuilder_EntityAction_Create<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
@@ -37,9 +38,9 @@ export class SpecBuilder_EntityAction_Create<TContext extends SpecBuilderContext
     //     return this as unknown as SpecBuilder_EntityAction_Create<_TReqCtx, _TPayloads, EndPoint<typeof val>>;
     // }
 
-    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_Create<ReplaceField<TContext, '_payloads', WritePayloads<T>>> {
+    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_Create<SetPayloads<TContext, WritePayloads<T>>> {
         this._payloads = val;
-        return this as SpecBuilder_EntityAction_Create<ReplaceField<TContext, '_payloads', WritePayloads<T>>>;
+        return this as unknown as SpecBuilder_EntityAction_Create<SetPayloads<TContext, WritePayloads<T>>>;
     }
 
     auth(handler: SpecBuilder_EntityAction_Create_AuthFunc<TContext>) {

@@ -1,5 +1,5 @@
 import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
-import type { EntityEndpointRouter } from '../../backend/rpc/endpoint-router';
+import type { EntityEndpointRouter } from '../../backend/rpc/trpc/endpoint-router';
 
 const client = createTRPCProxyClient<EntityEndpointRouter>({
     links: [

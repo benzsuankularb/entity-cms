@@ -1,3 +1,4 @@
+import { Prettify } from "../../../client/utils/types";
 import { InferTypeScheme, Spec_WritePayload, TypeScheme } from "../../../specs";
 
 export type WritePayloads<T extends SpecBuilder_WritePayloads> = {
@@ -44,8 +45,8 @@ export class SpecBuilder_WritePayload<_TValue = unknown> {
         return this;
     }
 
-    typeScheme<T extends TypeScheme>(value: T): SpecBuilder_WritePayload<InferTypeScheme<T>> {
+    typeScheme<T extends TypeScheme>(value: T): SpecBuilder_WritePayload<Prettify<InferTypeScheme<T>>> {
         this._spec.typeScheme = value;
-        return this as SpecBuilder_WritePayload<InferTypeScheme<T>>;
+        return this as SpecBuilder_WritePayload<Prettify<InferTypeScheme<T>>>;
     }
 }

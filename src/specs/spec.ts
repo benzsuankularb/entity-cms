@@ -98,13 +98,13 @@ const Spec_Entity = z.object({
     query: Spec_ReadEntityQuery.array().optional(),
 });
 
-type _MenuItem = {
+export type Spec_MenuItem = {
     name: string;
-    items: _MenuItem[];
+    items: Spec_MenuItem[];
     endpoint?: { entity: string; endpoint?: string; }
 };
 
-const Spec_MenuItem: z.ZodType<_MenuItem> = z.object({
+const Spec_MenuItem: z.ZodType<Spec_MenuItem> = z.object({
     name: z.string(),
     endpoint: z.object({
         entity: z.string(),
@@ -125,7 +125,6 @@ export const Spec_Root = z.object({
 });
 
 export type Spec_Root = z.infer<typeof Spec_Root>;
-export type Spec_MenuItem = z.infer<typeof Spec_MenuItem>;
 export type Spec_WritePayload = z.infer<typeof Spec_WritePayload>;
 export type Spec_ReadPayload = z.infer<typeof Spec_ReadPayload>;
 export type Spec_Entity = z.infer<typeof Spec_Entity>;

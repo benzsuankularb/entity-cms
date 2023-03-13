@@ -1,23 +1,23 @@
-import { Maybe } from "@trpc/server";
+import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_EntityCommand_Execute } from "../../../../specs";
-import { MaybePromise, ReplaceField, SpecBuilderContextTypes } from "../context";
+import { EndPoint, Payloads, RequestContext, SetPayloads, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_WritePayloads, WritePayloads } from "../write-payload";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
 type SpecBuilder_EntityAction_Command_HandleFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
-        payloads: T['_payloads'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
+        payloads: Payloads<T>,
         entityId: string
     }) => MaybePromise<void>
 
 type SpecBuilder_EntityAction_Command_AuthFunc<T extends SpecBuilderContextTypes> =
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
         entityId: string
-    }) => Maybe<boolean>
+    }) => MaybePromise<boolean>
 
 export class SpecBuilder_EntityAction_Command<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
     _type = 'entity-action-command';
@@ -50,9 +50,9 @@ export class SpecBuilder_EntityAction_Command<TContext extends SpecBuilderContex
         return this;
     }
 
-    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_Command<ReplaceField<TContext, '_payloads', WritePayloads<T>>> {
+    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_Command<SetPayloads<TContext, WritePayloads<T>>> {
         this._payloads = val;
-        return this as SpecBuilder_EntityAction_Command<ReplaceField<TContext, '_payloads', WritePayloads<T>>>;
+        return this as unknown as SpecBuilder_EntityAction_Command<SetPayloads<TContext, WritePayloads<T>>>;
     }
 
     auth(handler: SpecBuilder_EntityAction_Command_AuthFunc<TContext>) {

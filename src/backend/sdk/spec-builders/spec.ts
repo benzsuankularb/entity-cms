@@ -20,8 +20,8 @@ export class SpecBuilder_Spec<TContext extends SpecBuilderContextTypes> {
         return this;
     }
 
-    entity(entity: SpecBuilder_Entity<TContext>): this {
-        this._entitySpecBuilders.push(entity);
+    entity(...entities: SpecBuilder_Entity<TContext>[]): this {
+        this._entitySpecBuilders = [...entities]
         return this;
     }
 }

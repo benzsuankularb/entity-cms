@@ -1,19 +1,20 @@
+import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_GlobalCommand_Execute } from "../../../../specs";
-import { MaybePromise, ReplaceField, SpecBuilderContextTypes } from "../context";
+import { EndPoint, Payloads, RequestContext, SetPayloads, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_WritePayloads, WritePayloads } from "../write-payload";
 import { SpecBuilder_EntityAction } from "./entity-action";
 
 type SpecBuilder_EntityAction_GlobalCommand_HandleFunc<T extends SpecBuilderContextTypes> = 
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint'],
-        payloads: T['_payloads']
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
+        payloads: Payloads<T>
     }) => MaybePromise<void>
 
 type SpecBuilder_EntityAction_GlobalCommand_AuthFunc<T extends SpecBuilderContextTypes> = 
     (options: {
-        context: T['_request_context'],
-        endpoint?: T['_endpoint']
+        context: RequestContext<T>,
+        endpoint?: EndPoint<T>,
     }) => MaybePromise<boolean>
 
 export class SpecBuilder_EntityAction_GlobalCommand<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
@@ -48,9 +49,9 @@ export class SpecBuilder_EntityAction_GlobalCommand<TContext extends SpecBuilder
         return this;
     }
 
-    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_GlobalCommand<ReplaceField<TContext, '_payloads', WritePayloads<T>>> {
+    payloads<T extends SpecBuilder_WritePayloads>(val: T): SpecBuilder_EntityAction_GlobalCommand<SetPayloads<TContext, WritePayloads<T>>> {
         this._payloads = val;
-        return this as SpecBuilder_EntityAction_GlobalCommand<ReplaceField<TContext, '_payloads', WritePayloads<T>>>;
+        return this as unknown as SpecBuilder_EntityAction_GlobalCommand<SetPayloads<TContext, WritePayloads<T>>>;
     }
 
     auth(handler: SpecBuilder_EntityAction_GlobalCommand_AuthFunc<TContext>) {

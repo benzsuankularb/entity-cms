@@ -1,3 +1,4 @@
+import { Prettify } from "../../../client/utils/types";
 import { InferTypeScheme, Spec_ReadPayload, TypeScheme } from "../../../specs";
 
 export type ReadPayloads<T extends SpecBuilder_ReadPayloads> = {
@@ -23,8 +24,8 @@ export class SpecBuilder_ReadPayload<_TValue = unknown> {
         return this;
     }
 
-    typeScheme<T extends TypeScheme>(value: T): SpecBuilder_ReadPayload<InferTypeScheme<T>> {
+    typeScheme<T extends TypeScheme>(value: T): SpecBuilder_ReadPayload<Prettify<InferTypeScheme<T>>> {
         this._spec.typeScheme = value;
-        return this as SpecBuilder_ReadPayload<InferTypeScheme<T>>;
+        return this as SpecBuilder_ReadPayload<Prettify<InferTypeScheme<T>>>;
     }
 }
