@@ -1,3 +1,3 @@
 export * from './context';
-export * from './endpoint-router';
+export * from './entity-endpoint-router';
 

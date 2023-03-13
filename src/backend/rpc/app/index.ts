@@ -1,5 +1,6 @@
 import * as trpcExpress from '@trpc/server/adapters/express';
 import express from "express";
+import { expressBinaryRouter } from './express/binary-router';
 import { RpcBinaryHandler, RpcEntityEndpointHandler } from './interfaces';
 import { createTrpcRequestContext, trpcEntityEndpointRouter } from './trpc';
 
@@ -12,7 +13,7 @@ export const createExpressRouter = (options: {
     const router = express.Router();
     
     const injectDependencies = async (req: express.Request, _: express.Response, next: express.NextFunction) => {
-        req.appRpc.endpointHandler = options.endpointHandler;
+        req.appRpc.entityEndpointHandler = options.endpointHandler;
         req.appRpc.binaryHandler = options.binaryHandler;
         next();
     }
@@ -25,11 +26,7 @@ export const createExpressRouter = (options: {
       })
     );
 
-    // router.use('/binaries', injectDependencies, trpcExpress.createExpressMiddleware({
-    //     router: trpcEntityEndpointRouter,
-    //     createContext: createTrpcRequestContext,
-    //   })
-    // );
+    router.use('/binaries', expressBinaryRouter);
     
     return router;
 };

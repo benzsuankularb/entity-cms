@@ -8,32 +8,32 @@ export const trpcEntityEndpointRouter = t.router({
     queryReadEntities: t.procedure
         .input(QueryReadEntitiesOptions)
         .query(async ({ input, ctx }) => {
-            return ctx.endpointHandler.queryReadEntities(input);
+            return ctx.entityEndpointHandler.queryReadEntities(input);
         }),
     getWriteEntity: t.procedure
         .input(GetEntityOptions)
         .query(({ input, ctx }) => {
-            return ctx.endpointHandler.getEntity(input);
+            return ctx.entityEndpointHandler.getEntity(input);
         }),
     executeCommand: t.procedure
         .input(ExecuteCommandOptions)
         .mutation(({ input, ctx }) => {
-            return ctx.endpointHandler.executeCommand(input);
+            return ctx.entityEndpointHandler.executeCommand(input);
         }),
     suggestCommandInput: t.procedure
         .input(SuggestCommandInputOptions)
         .query(({ input, ctx }) => {
-            return ctx.endpointHandler.suggestCommandInput(input);
+            return ctx.entityEndpointHandler.suggestCommandInput(input);
         }),
     executeGlobalCommand: t.procedure
         .input(ExecuteGlobalCommandOptions)
         .mutation(({ input, ctx }) => {
-            return ctx.endpointHandler.executeGlobalCommand(input);
+            return ctx.entityEndpointHandler.executeGlobalCommand(input);
         }),
     suggestGlobalCommandInput: t.procedure
         .input(SuggestGlobalCommandInputOptions)
         .query(({ input, ctx }) => {
-            return ctx.endpointHandler.suggestGlobalCommandInput(input);
+            return ctx.entityEndpointHandler.suggestGlobalCommandInput(input);
         })
 });
 
