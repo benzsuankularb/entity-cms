@@ -1,5 +1,5 @@
 import * as Spec from '../../common/specs';
-import { EventEmitter } from '../utils/event-emitter';
+import { EventEmitter } from '../../utils/event-emitter';
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
 

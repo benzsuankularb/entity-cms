@@ -1,5 +1,5 @@
-import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_GlobalCommand_Execute } from "../../../../common/specs";
+import { MaybePromise } from "../../../../utils/types";
 import { EndPoint, Payloads, RequestContext, SetPayloads, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_WritePayloads, WritePayloads } from "../write-payload";
 import { SpecBuilder_EntityAction } from "./entity-action";

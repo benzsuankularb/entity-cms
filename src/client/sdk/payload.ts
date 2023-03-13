@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { TypeScheme } from "../../common/specs";
-import { EventEmitter } from "../utils/event-emitter";
-import { DeepReadonly } from "../utils/types";
+import { EventEmitter } from "../../utils/event-emitter";
+import { DeepReadonly } from "../../utils/types";
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
 import { PayloadsInternal } from "./payloads";
@@ -17,8 +17,7 @@ export interface PayloadField<T = unknown> {
     readonly value: T;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface PayloadField_Any extends PayloadField<any> {
+export interface PayloadField_Unknown extends PayloadField<unknown> {
     asString(): PayloadField_Value<string>;
     asNumber(): PayloadField_Value<number>;
     asInteger(): PayloadField_Value<number>;
@@ -63,8 +62,7 @@ export interface PayloadFieldInternalOptions<T> {
     initialValue: T;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export abstract class PayloadFieldInternal<T = any> implements PayloadField<T> {
+export abstract class PayloadFieldInternal<T> implements PayloadField<T> {
     readonly onMetaUpdated: EventEmitter<PayloadFieldMeta>;
     readonly onValidatedUpdated: EventEmitter<boolean>;
     readonly onValueUpdated: EventEmitter<T>;

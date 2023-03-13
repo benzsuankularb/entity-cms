@@ -1,5 +1,5 @@
-import { MaybePromise } from "../../../../client/utils/types";
 import { Spec_ReadEntityQuery } from "../../../../common/specs";
+import { MaybePromise } from "../../../../utils/types";
 import { EndPoint, ReadEntity, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
 

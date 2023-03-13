@@ -1,14 +1,14 @@
 import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payloads-validator';
 import { Spec_WritePayload } from '../../common/specs';
-import { EventEmitter } from "../utils/event-emitter";
+import { EventEmitter } from "../../utils/event-emitter";
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
-import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Any } from './payload';
+import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload';
 
 export interface Payloads {
     readonly onValidatedUpdated: EventEmitter<boolean>;
     readonly validated: boolean;
-    readonly fields: readonly PayloadField_Any[];
+    readonly fields: readonly PayloadField_Unknown[];
 }
 
 export interface PayloadsInternalOptions {
@@ -54,7 +54,9 @@ export class PayloadsInternal implements Payloads {
                 parent: this,
                 typeScheme: fieldSpec.typeScheme
             };
-            let field: PayloadFieldInternal;
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            let field: PayloadFieldInternal<any>;
             if (type === 'binary') {
                 field = new PayloadFieldInternal_Binary(fieldOptions);
             } else if (type === 'entity') {
@@ -62,12 +64,13 @@ export class PayloadsInternal implements Payloads {
             } else {
                 field = new PayloadFieldInternal_Value<unknown>(fieldOptions);
             }
+            
             field.onValueUpdated.addListener(this._revalidate.bind(this));
             this._fields[fieldSpec.id] = field;
         }
     }
     
-    get fields(): PayloadField_Any[] {
+    get fields(): PayloadField_Unknown[] {
         return Object.values(this._fields);
     }
 

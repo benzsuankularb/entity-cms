@@ -1,5 +1,5 @@
-import { Prettify } from "../../../client/utils/types";
 import { Spec_Entity_Section } from "../../../common/specs";
+import { Prettify } from "../../../utils/types";
 import { SpecBuilder_WritePayloads, WritePayloads } from "./write-payload";
 
 export type InferSpecBuilder_EntitySection<T extends SpecBuilder_EntitySection<object>> = T  extends SpecBuilder_EntitySection<infer U> ? U : never;

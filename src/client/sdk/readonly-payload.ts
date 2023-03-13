@@ -1,9 +1,9 @@
 import { TypeScheme } from '../../common/specs';
 import { ReadEntity } from './entity';
-import { PayloadField_Any } from './payload';
+import { PayloadField_Unknown } from './payload';
 
 export interface ReadonlyPayloads {
-    readonly fields: readonly PayloadField_Any[];
+    readonly fields: readonly PayloadField_Unknown[];
 }
 
 export interface ReadonlyPayloadField_Unknown {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Prettify, ReplaceField } from "../../../client/utils/types";
+import { Prettify, ReplaceField } from "../../../utils/types";
 import { SpecBuilder_Entity } from "./entity";
 import { SpecBuilder_EntityAction_Command, SpecBuilder_EntityAction_Create, SpecBuilder_EntityAction_Delete, SpecBuilder_EntityAction_GlobalCommand, SpecBuilder_EntityAction_QueryByIds, SpecBuilder_EntityAction_Section } from "./entity-actions";
 import { SpecBuilder_EntitySection } from "./entity-section";
