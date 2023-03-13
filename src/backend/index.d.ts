@@ -1,15 +1,16 @@
-import { RpcBinaryHandler, RpcEntityEndpointHandler } from "./rpc/app/interfaces";
-import { RpcSpecHandler } from "./rpc/spec/interfaces";
+import { AppRpc, SpecRpc } from "./rpc";
 
 declare global {
   namespace Express {
     interface Request {
       appRpc: {
-        entityEndpointHandler: RpcEntityEndpointHandler;
-        binaryHandler: RpcBinaryHandler;
+        entityEndpointHandler: AppRpc.RpcEntityEndpointHandler;
+        binaryHandler: AppRpc.RpcBinaryHandler;
+        requestContext: AppRpc.RpcReqeustContext;
       };
       specRpc: {
-        specHandler: RpcSpecHandler;
+        specHandler: SpecRpc.RpcSpecHandler;
+        requestContext: SpecRpc.RpcReqeustContext;
       }
     }
   }

@@ -3,7 +3,9 @@ import * as trpcExpress from '@trpc/server/adapters/express';
 
 export const createTrpcRequestContext = ({ req }: trpcExpress.CreateExpressContextOptions) => {
     return {
-      specHandler: req.specRpc.specHandler,
+      entityEndpointHandler: req.appRpc.entityEndpointHandler,
+      binaryHandler: req.appRpc.binaryHandler,
+      requestContext: {}, //TODO RpcRequestContext
     };
 };
 

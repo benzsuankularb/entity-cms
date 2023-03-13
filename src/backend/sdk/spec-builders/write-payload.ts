@@ -1,5 +1,5 @@
 import { Prettify } from "../../../client/utils/types";
-import { InferTypeScheme, Spec_WritePayload, TypeScheme } from "../../../specs";
+import { InferTypeScheme, Spec_WritePayload, TypeScheme } from "../../../common/specs";
 
 export type WritePayloads<T extends SpecBuilder_WritePayloads> = {
     [I in keyof T]: WritePayload<T[I]>

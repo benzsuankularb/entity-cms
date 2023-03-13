@@ -1,4 +1,4 @@
-import { Spec_Entity } from "../../../specs";
+import { Spec_Entity } from "../../../common/specs";
 import { createSpecBuilderActionsContext, SetEntitySections, SetReadEntity, SpecBuilderActionsContext, SpecBuilderContextTypes } from "./context";
 import { SpecBuilder_EntityAction } from "./entity-actions/entity-action";
 import { InferSpecBuilder_EntitySection, SpecBuilder_EntitySection } from "./entity-section";

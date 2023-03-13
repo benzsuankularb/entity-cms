@@ -1,2 +1,3 @@
-export * as AppRpc from './app';
-export * as SpecRpc from './spec';
+export * as AppRpc from './app-rpc/express-router';
+export * as SpecRpc from './spec-rpc/express-router';
+

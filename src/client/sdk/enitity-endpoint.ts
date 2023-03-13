@@ -1,4 +1,4 @@
-import { Spec_Entity } from '../../specs';
+import { Spec_Entity } from '../../common/specs';
 import { EntityList_Command } from './command';
 import { EntityCMSContext } from "./common";
 import { Entity } from './entity';

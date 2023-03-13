@@ -2,14 +2,14 @@
 import * as z from "zod";
 import { Spec_WritePayload, TypeScheme } from "../specs";
 
-export type ValidatePayloadsFunction = (payloads: { [id: string]: unknown }) => [invalidIds: string[]];
+export type ValidatePayloadsFunction = (payloads: { [id: string]: unknown }) => [valid: boolean, invalidPayloads: string[]];
 
-export function createPayloadsValidator(payloadFieldSpecs: Spec_WritePayload[]): ValidatePayloadsFunction {
-    const typeValidators: { [id: string]: (value: any) => boolean } = {};
-    payloadFieldSpecs.forEach(spec => typeValidators[spec.id] = createTypeValidator(spec.typeScheme));
+export function createPayloadsValidator(payloadsSpec: Spec_WritePayload[]): ValidatePayloadsFunction {
+    const payloadField_TypeValidators: { [id: string]: (value: any) => boolean } = {};
+    payloadsSpec.forEach(spec => payloadField_TypeValidators[spec.id] = createTypeValidator(spec.typeScheme));
     
     const validateField = (payloads: {[id: string]: unknown}, id: string) => {
-        const typeValidator = typeValidators[id];
+        const typeValidator = payloadField_TypeValidators[id];
         if (!typeValidator) {
             return false;
         }
@@ -19,12 +19,17 @@ export function createPayloadsValidator(payloadFieldSpecs: Spec_WritePayload[]):
             return false;
         }
         
+        // FUTURE: cross field validation.
+
         return true;
     }
 
     return (payloads: {[id: string]: unknown}) => {
-        const invalidIds = Object.keys(payloads).filter(payloadId => !validateField(payloads, payloadId));
-        return [invalidIds];
+        const invalidPayloads = Object.keys(payloads).filter(payloadId => !validateField(payloads, payloadId));
+        return [
+            invalidPayloads.length === 0,
+            invalidPayloads
+        ];
     };
 }
 

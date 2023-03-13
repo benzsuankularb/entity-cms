@@ -1,5 +1,5 @@
 import { Prettify } from "../../../client/utils/types";
-import { InferTypeScheme, Spec_ReadPayload, TypeScheme } from "../../../specs";
+import { InferTypeScheme, Spec_ReadPayload, TypeScheme } from "../../../common/specs";
 
 export type ReadPayloads<T extends SpecBuilder_ReadPayloads> = {
     [I in keyof T]: ReadPayload<T[I]>

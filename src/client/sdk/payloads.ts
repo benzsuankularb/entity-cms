@@ -1,14 +1,14 @@
-import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payload-validator';
-import { Spec_WritePayload } from '../../specs';
-import { EventEmitter } from "../utils/event";
+import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payloads-validator';
+import { Spec_WritePayload } from '../../common/specs';
+import { EventEmitter } from "../utils/event-emitter";
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
-import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload';
+import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Any } from './payload';
 
 export interface Payloads {
-    readonly onValidatedUpdated: EventEmitter;
+    readonly onValidatedUpdated: EventEmitter<boolean>;
     readonly validated: boolean;
-    readonly fields: readonly PayloadField_Unknown[];
+    readonly fields: readonly PayloadField_Any[];
 }
 
 export interface PayloadsInternalOptions {
@@ -19,17 +19,20 @@ export interface PayloadsInternalOptions {
 }
 
 export class PayloadsInternal implements Payloads {
-    readonly onValidatedUpdated: EventEmitter;
+    
+    readonly onValidatedUpdated: EventEmitter<boolean>;
+    validated: boolean;
+    
     private _fieldSpecs: Spec_WritePayload[];
     private _fields: { [id: string]: PayloadFieldInternal<unknown> };
     private _validatePayloads: ValidatePayloadsFunction;
-    validated: boolean;
 
     constructor(options: PayloadsInternalOptions) {
-        this._fieldSpecs = options.fieldSpecs;
         this.onValidatedUpdated = new EventEmitter();
-        this._validatePayloads = createPayloadsValidator(this._fieldSpecs);
         this.validated = false;
+        
+        this._validatePayloads = createPayloadsValidator(options.fieldSpecs);
+        this._fieldSpecs = options.fieldSpecs;
         this._fields = {};
 
         // create fields
@@ -51,32 +54,32 @@ export class PayloadsInternal implements Payloads {
                 parent: this,
                 typeScheme: fieldSpec.typeScheme
             };
-            let field: PayloadFieldInternal<unknown>
+            let field: PayloadFieldInternal;
             if (type === 'binary') {
                 field = new PayloadFieldInternal_Binary(fieldOptions);
             } else if (type === 'entity') {
                 field = new PayloadFieldInternal_Entity(fieldOptions);
             } else {
-                field = new PayloadFieldInternal_Value(fieldOptions);
+                field = new PayloadFieldInternal_Value<unknown>(fieldOptions);
             }
             field.onValueUpdated.addListener(this._revalidate.bind(this));
             this._fields[fieldSpec.id] = field;
         }
     }
     
-    get fields(): PayloadField_Unknown[] {
+    get fields(): PayloadField_Any[] {
         return Object.values(this._fields);
     }
 
     private _revalidate() {
         const values = this.values();
-        const [_invalidPayloadIds] = this._validatePayloads(values);
+        const [valid, _invalidPayloadIds] = this._validatePayloads(values);
         const invalidPayloadIds = new Set(_invalidPayloadIds);
         Object.values(this._fields).forEach(field => {
             const isValidated = !invalidPayloadIds.has(field.id);
             field.setValidated(isValidated);
         });
-        this._setValidated(_invalidPayloadIds.length === 0);
+        this._setValidated(valid);
     }
 
     private _setValidated(val: boolean) {
@@ -84,7 +87,7 @@ export class PayloadsInternal implements Payloads {
             return;
         }
         this.validated = val;
-        this.onValidatedUpdated.invoke();
+        this.onValidatedUpdated.invoke(val);
     }
 
     values() {

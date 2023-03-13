@@ -1,4 +1,4 @@
-import { Spec_Root } from "../../../specs";
+import { Spec_Root } from "../../../common/specs";
 import { SpecBuilderContextTypes } from "./context";
 import { SpecBuilder_Entity } from "./entity";
 import { SpecBuilder_MenuItem } from "./menu-item";

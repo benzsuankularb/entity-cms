@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RpcRequestContext } from "./request-context";
 
 export const QueryReadEntitiesOptions = z.object({
     authentication: z.string().optional(),
@@ -85,32 +86,39 @@ export type ExecuteCreateCommandOptions = z.infer<typeof ExecuteCreateCommandOpt
 export type ExecuteCommandOptions = z.infer<typeof ExecuteCommandOptions>;
 export type SuggestCommandInputOptions = z.infer<typeof SuggestCommandInputOptions>;
 
+export type QueryReadEntitiesResponse = {
+    items: ReadEntity[],
+    count: number,
+    embededEntities: { [entity: string]: { [id: string]: ReadEntity } }
+};
+
+export type GetEntityResposne = {
+    entity: Entity | null,
+    embededEntities: { [entity: string]: { [id: string]: ReadEntity } } 
+}
+
+export type ExecuteGlobalCommandResponse = {
+    success: boolean,
+    newEntityId?: string
+}
+
+export type SuggestGlobalCommandInputResponse = {
+    items: unknown[];
+}
+
+export type ExecuteCommand = {
+    success: boolean;
+}
+
+export type SuggestCommandInputResponse = {
+    items: unknown[];
+}
+
 export interface RpcEntityEndpointHandler {
-    queryReadEntities(options: QueryReadEntitiesOptions): Promise<{
-        items: ReadEntity[],
-        count: number,
-        embededEntities: { [entity: string]: { [id: string]: ReadEntity } }
-    }>;
-    
-    getEntity(options: GetEntityOptions): Promise<{
-        entity: Entity | null,
-        embededEntities: { [entity: string]: { [id: string]: ReadEntity } } 
-    }>;
-
-    executeGlobalCommand(options: ExecuteGlobalCommandOptions): Promise<{
-        success: boolean,
-        newEntityId?: string
-    }>;
-
-    suggestGlobalCommandInput(options: SuggestGlobalCommandInputOptions): Promise<{
-        items: unknown[];
-    }>;
-
-    executeCommand(options: ExecuteCommandOptions): Promise<{
-        success: boolean;
-    }>;
-    
-    suggestCommandInput(options: SuggestCommandInputOptions): Promise<{
-        items: unknown[];
-    }>;
+    queryReadEntities(context: RpcRequestContext, options: QueryReadEntitiesOptions): Promise<QueryReadEntitiesResponse>;
+    getEntity(context: RpcRequestContext, options: GetEntityOptions): Promise<GetEntityResposne>;
+    executeGlobalCommand(context: RpcRequestContext, options: ExecuteGlobalCommandOptions): Promise<ExecuteGlobalCommandResponse>;
+    suggestGlobalCommandInput(context: RpcRequestContext, options: SuggestGlobalCommandInputOptions): Promise<SuggestGlobalCommandInputResponse>;
+    executeCommand(context: RpcRequestContext, options: ExecuteCommandOptions): Promise<ExecuteCommand>;
+    suggestCommandInput(context: RpcRequestContext, options: SuggestCommandInputOptions): Promise<SuggestCommandInputResponse>;
 }

@@ -1,4 +1,4 @@
-import * as Spec from '../../specs';
+import * as Spec from '../../common/specs';
 import { CustomFunction, EntityCMSContext } from './common';
 import { EntityEndPoint } from './enitity-endpoint';
 

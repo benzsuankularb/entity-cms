@@ -1,5 +1,5 @@
 import { MaybePromise } from "@trpc/server";
-import { Spec_EntityCommand_Delete } from "../../../../specs";
+import { Spec_EntityCommand_Delete } from "../../../../common/specs";
 import { EndPoint, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
 

@@ -8,7 +8,7 @@ export const trpcSpecRouter = t.router({
     getSpec: t.procedure
         .input(GetSpecOptions)
         .query(async ({ input, ctx }) => {
-            return ctx.specHandler.getSpec(input);
+            return ctx.specHandler.getSpec(ctx.requestContext, input);
         })
 });
 

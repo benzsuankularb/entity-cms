@@ -9,12 +9,14 @@ export const createExpressRouter = (options: {
 
     const router = express.Router();
     
-    const injectDependencies = async (req: express.Request, _: express.Response, next: express.NextFunction) => {
-        req.specRpc.specHandler = options.specHandler;
+    // prepare request context & dependencies
+    router.use(async (req: express.Request, _: express.Response, next: express.NextFunction) => {
+        req.specRpc = {
+            specHandler: options.specHandler,
+            requestContext: { } //TODO auth header
+        }
         next();
-    }
-
-    router.use(injectDependencies);
+    });
 
     router.use('/', trpcExpress.createExpressMiddleware({
         router: trpcSpecRouter,

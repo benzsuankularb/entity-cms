@@ -1,6 +1,5 @@
-import { EventEmitter } from 'stream';
-import * as Spec from '../../specs';
-import { EntityList_Command } from './command';
+import * as Spec from '../../common/specs';
+import { EventEmitter } from '../utils/event-emitter';
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
 
@@ -30,15 +29,15 @@ export class EntityList {
     private entityId: string;
     private endpoint?: string;
 
-    readonly onUpdated: EventEmitter;
+    readonly onItemsUpdated: EventEmitter<ReadEntity[]>;
     readonly columns: EntityList_Column[];
-    readonly commands: EntityList_Command[];
+    // readonly commands: EntityList_Command[];
     
     total: number;
     items: ReadEntity[];
 
     constructor(options: EntityListOptions) {
-        this.onUpdated = new EventEmitter();
+        this.onItemsUpdated = new EventEmitter();
         this.context = options.context;
         this.entityId = options.entityId;
         this.endpoint = options.endpoint;

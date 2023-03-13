@@ -1,4 +1,4 @@
-import { Spec_MenuItem } from "../../../specs";
+import { Spec_MenuItem } from "../../../common/specs";
 import { SpecBuilderContextTypes } from "./context";
 
 export class SpecBuilder_MenuItem<TContext extends SpecBuilderContextTypes> {

@@ -1,15 +1,15 @@
-import * as _ from 'lodash';
-import { TypeScheme } from "../../specs";
-import { EventEmitter } from "../utils/event";
+import _ from 'lodash';
+import { TypeScheme } from "../../common/specs";
+import { EventEmitter } from "../utils/event-emitter";
 import { DeepReadonly } from "../utils/types";
 import { EntityCMSContext } from "./common";
 import { ReadEntity } from './entity';
 import { PayloadsInternal } from "./payloads";
 
-export interface PayloadField<T> {
-    readonly onMetaUpdated: EventEmitter;
-    readonly onValidatedUpdated: EventEmitter;
-    readonly onValueUpdated: EventEmitter;
+export interface PayloadField<T = unknown> {
+    readonly onMetaUpdated: EventEmitter<PayloadFieldMeta>;
+    readonly onValidatedUpdated: EventEmitter<boolean>;
+    readonly onValueUpdated: EventEmitter<T>;
     readonly id: string;
     readonly typeScheme: DeepReadonly<TypeScheme>;
     readonly meta: DeepReadonly<PayloadFieldMeta>;
@@ -17,7 +17,8 @@ export interface PayloadField<T> {
     readonly value: T;
 }
 
-export interface PayloadField_Unknown extends PayloadField<unknown> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export interface PayloadField_Any extends PayloadField<any> {
     asString(): PayloadField_Value<string>;
     asNumber(): PayloadField_Value<number>;
     asInteger(): PayloadField_Value<number>;
@@ -62,10 +63,11 @@ export interface PayloadFieldInternalOptions<T> {
     initialValue: T;
 }
 
-export abstract class PayloadFieldInternal<T> implements PayloadField_Unknown {
-    readonly onMetaUpdated: EventEmitter;
-    readonly onValidatedUpdated: EventEmitter;
-    readonly onValueUpdated: EventEmitter;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export abstract class PayloadFieldInternal<T = any> implements PayloadField<T> {
+    readonly onMetaUpdated: EventEmitter<PayloadFieldMeta>;
+    readonly onValidatedUpdated: EventEmitter<boolean>;
+    readonly onValueUpdated: EventEmitter<T>;
     
     readonly context: EntityCMSContext;
     readonly parent: PayloadsInternal;
@@ -76,9 +78,9 @@ export abstract class PayloadFieldInternal<T> implements PayloadField_Unknown {
     value: T;
 
     constructor(options: PayloadFieldInternalOptions<T>) {
-        this.onMetaUpdated = new EventEmitter();
-        this.onValidatedUpdated = new EventEmitter();
-        this.onValueUpdated = new EventEmitter();
+        this.onMetaUpdated = new EventEmitter<PayloadFieldMeta>();
+        this.onValidatedUpdated = new EventEmitter<boolean>();
+        this.onValueUpdated = new EventEmitter<T>();
         
         this.context = options.context;
         this.parent = options.parent;
@@ -138,31 +140,31 @@ export abstract class PayloadFieldInternal<T> implements PayloadField_Unknown {
         return this as unknown as PayloadField_Entity;
     }
 
-    setValue(value: T) {
-        if (_.isEqual(this.value, value)) {
+    setValue(val: T) {
+        if (_.isEqual(this.value, val)) {
             return;
         }
 
-        this.value = value;
-        this.onValueUpdated.invoke();
+        this.value = val;
+        this.onValueUpdated.invoke(val);
     }
 
-    setMeta(value: PayloadFieldMeta) {
-        if (_.isEqual(this.meta, value)) {
+    setMeta(val: PayloadFieldMeta) {
+        if (_.isEqual(this.meta, val)) {
             return;
         }
         
-        this.meta = value;
-        this.onMetaUpdated.invoke();
+        this.meta = val;
+        this.onMetaUpdated.invoke(val);
     }
 
-    setValidated(value: boolean) {
-        if (this.validated === value) {
+    setValidated(val: boolean) {
+        if (this.validated === val) {
             return;
         }
 
         this.validated = true;
-        this.onValidatedUpdated.invoke();
+        this.onValidatedUpdated.invoke(val);
     }
     
 }

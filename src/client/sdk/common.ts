@@ -1,4 +1,4 @@
-import * as Spec from '../../specs';
+import * as Spec from '../../common/specs';
 
 export type CustomFunction = () => Promise<void>;
 
