@@ -1,7 +1,7 @@
-import { Spec_EntitySection } from "../../../../common/specs";
-import { ApplicationContext } from "../context";
+import { Spec_EntitySection } from "../../../common/specs";
+import { ApplicationContext } from "./context";
 
-export interface Entity_SectionOptions {
+export interface EntitySectionOptions {
     context: ApplicationContext;
     entityType: string;
     endpoint?: string;
@@ -10,7 +10,7 @@ export interface Entity_SectionOptions {
     spec: Spec_EntitySection;
 }
 
-export class Entity_Section {
+export class EntitySection {
 
     private _context: ApplicationContext;
     private _spec: Spec_EntitySection;
@@ -24,7 +24,7 @@ export class Entity_Section {
         return this._spec.readOnly ?? false;
     }
 
-    constructor(options: Entity_SectionOptions) {
+    constructor(options: EntitySectionOptions) {
         this._context = options.context;
         this._spec = options.spec;
 

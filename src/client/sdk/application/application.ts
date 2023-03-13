@@ -1,7 +1,7 @@
 import { Spec_MenuItem, Spec_Root } from '../../../common/specs';
 import { RpcClient } from '../../rpc/client';
 import { ApplicationContext, CustomFunction } from './context';
-import { EntityEndPoint } from './enitity-endpoint';
+import { EntityEndpoint } from './enitity-endpoint';
 
 export type MenuItem = Spec_MenuItem;
 
@@ -27,14 +27,14 @@ export class Application {
         return this;
     }
     
-    getEndpoint(entityType: string, endpoint?: string): EntityEndPoint {
+    getEndpoint(entityType: string, endpoint?: string): EntityEndpoint {
         const { _context: context } = this;
         const entitySpec = context.spec.entities[entityType];
         if (!entitySpec) {
             throw `invalid endpoint ${entityType}`
         }
         
-        return new EntityEndPoint({
+        return new EntityEndpoint({
             context,
             entityType,
             endpoint

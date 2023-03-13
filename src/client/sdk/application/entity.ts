@@ -1,8 +1,8 @@
 import { Spec_Entity } from "../../../common/specs";
 import { ApplicationContext } from "./context";
-import { Entity_Command } from "./entity-mutations/entity-command";
-import { Entity_Section } from "./entity-mutations/entity-section";
-import { ReadonlyPayloads } from "./readonly-payload";
+import { EntityCommand } from "./entity-command";
+import { EntitySection } from "./entity-section";
+import { ReadonlyPayloadField_Unknown } from "./readonly-payload";
 
 export interface EntityOptions {
     context: ApplicationContext;
@@ -21,8 +21,8 @@ export class Entity {
     readonly entityId: string;
     readonly entityType: string;
     readonly endpoint?: string;
-    readonly sections: Entity_Section[];
-    readonly commands: Entity_Command[];
+    readonly sections: EntitySection[];
+    readonly commands: EntityCommand[];
     
     get created(): number | boolean | undefined {
         return this._created;
@@ -41,7 +41,7 @@ export class Entity {
         const sectionSpecs = this._spec.sections ?? {};
         this.sections = Object.keys(sectionSpecs).map(sectionId => {
             const spec = sectionSpecs[sectionId];
-            return new Entity_Section({
+            return new EntitySection({
                 context: this._context,
                 entityType: this.entityType,
                 entityId: this.entityId,
@@ -53,7 +53,7 @@ export class Entity {
 
         const commandSpecs = this._spec.commands ?? [];
         this.commands = commandSpecs.map(commandSpec => {
-            return new Entity_Command({
+            return new EntityCommand({
                 context: this._context,
                 entityType: this.entityType,
                 entityId: this.entityId,
@@ -68,7 +68,7 @@ export interface ReadEntity {
     id: string;
     created?: number | boolean;
     deleted?: number | boolean;
-    payloads: ReadonlyPayloads[];
+    payloads: ReadonlyPayloadField_Unknown[];
     commands?: { name: string; command: string; scope?: string; }[];
     toString(): string;
 }

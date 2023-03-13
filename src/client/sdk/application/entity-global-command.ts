@@ -1,23 +1,23 @@
-import { Spec_GlobalCommand } from "../../../../common/specs";
-import { ApplicationContext } from "../context";
-import { Payloads } from "../payloads";
+import { Spec_EntityGlobalCommand } from "../../../common/specs";
+import { ApplicationContext } from "./context";
+import { Payloads } from "./payloads";
 
-export interface Entity_GlobalCommandOptions {
+export interface EntityGlobalCommandOptions {
     context: ApplicationContext;
     entityType: string;
     endpoint?: string;
-    spec: Spec_GlobalCommand;
+    spec: Spec_EntityGlobalCommand;
 }
 
-export class Entity_GlobalCommand {
+export class EntityGlobalCommand {
 
     private _context: ApplicationContext;
-    private _spec: Spec_GlobalCommand;
+    private _spec: Spec_EntityGlobalCommand;
     readonly entityType: string;
     readonly endpoint?: string;
     readonly payloads: Payloads;
 
-    constructor(options: Entity_GlobalCommandOptions) {
+    constructor(options: EntityGlobalCommandOptions) {
         this._context = options.context;
         this._spec = options.spec;
         this.entityType = options.entityType;

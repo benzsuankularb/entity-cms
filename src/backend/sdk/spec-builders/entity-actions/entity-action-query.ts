@@ -1,4 +1,4 @@
-import { Spec_ReadEntityQuery } from "../../../../common/specs";
+import { Spec_EntityGloablQuery } from "../../../../common/specs";
 import { MaybePromise } from "../../../../utils/types";
 import { EndPoint, ReadEntity, RequestContext, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_EntityAction } from "./entity-action";
@@ -19,7 +19,7 @@ type EntityQuery_List_AuthFunc<T extends SpecBuilderContextTypes> =
 export class SpecBuilder_EntityAction_List<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
 
     _type = 'entity-action-query';
-    _spec: Partial<Spec_ReadEntityQuery>;
+    _spec: Partial<Spec_EntityGloablQuery>;
     // _endpoints?: SpecBuilder_EndPoints<unknown, _TEndPoint>;
     _auth?: EntityQuery_List_AuthFunc<TContext>
     _handle?: EntityQuery_List_HandleFunc<TContext>;

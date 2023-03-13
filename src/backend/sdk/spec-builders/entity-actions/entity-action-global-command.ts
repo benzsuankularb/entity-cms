@@ -1,4 +1,4 @@
-import { Spec_GlobalCommand_Execute } from "../../../../common/specs";
+import { Spec_EntityGlobalCommand_Execute } from "../../../../common/specs";
 import { MaybePromise } from "../../../../utils/types";
 import { EndPoint, Payloads, RequestContext, SetPayloads, SpecBuilderContextTypes } from "../context";
 import { SpecBuilder_WritePayloads, WritePayloads } from "../write-payload";
@@ -20,7 +20,7 @@ type SpecBuilder_EntityAction_GlobalCommand_AuthFunc<T extends SpecBuilderContex
 export class SpecBuilder_EntityAction_GlobalCommand<TContext extends SpecBuilderContextTypes> extends SpecBuilder_EntityAction<TContext> {
 
     _type = 'entity-action-global-command';
-    _spec: Partial<Spec_GlobalCommand_Execute>;
+    _spec: Partial<Spec_EntityGlobalCommand_Execute>;
     _payloads: SpecBuilder_WritePayloads;
     // _endpoints?: SpecBuilder_EndPoints<unknown, _TEndPoint>;
     _auth?: SpecBuilder_EntityAction_GlobalCommand_AuthFunc<TContext>

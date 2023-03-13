@@ -1,7 +1,8 @@
-import { Spec_EntityCommand } from "../../../../common/specs";
-import { ApplicationContext } from "../context";
+import { Spec_EntityCommand } from "../../../common/specs";
+import { ApplicationContext } from "./context";
+import { Payloads } from "./payloads";
 
-export interface Entity_CommandOptions {
+export interface EntityCommandOptions {
     context: ApplicationContext;
     entityType: string;
     endpoint?: string;
@@ -9,7 +10,7 @@ export interface Entity_CommandOptions {
     spec: Spec_EntityCommand;
 }
 
-export class Entity_Command {
+export class EntityCommand {
 
     private _context: ApplicationContext;
     private _spec: Spec_EntityCommand;
@@ -24,7 +25,7 @@ export class Entity_Command {
     // command
     // scope
 
-    constructor(options: Entity_CommandOptions) {
+    constructor(options: EntityCommandOptions) {
         this._context = options.context;
         this._spec = options.spec;
 
