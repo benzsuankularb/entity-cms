@@ -6,7 +6,9 @@ export type ValidatePayloadsFunction = (payloads: { [id: string]: unknown }) => 
 
 export function createPayloadsValidator(payloadsSpec: Spec_WritePayload[]): ValidatePayloadsFunction {
     const payloadField_TypeValidators: { [id: string]: (value: any) => boolean } = {};
-    payloadsSpec.forEach(spec => payloadField_TypeValidators[spec.id] = createTypeValidator(spec.typeScheme));
+    payloadsSpec.forEach(spec => {
+        payloadField_TypeValidators[spec.id] = createTypeValidator(spec.typeScheme)
+    });
     
     const validateField = (payloads: {[id: string]: unknown}, id: string) => {
         const typeValidator = payloadField_TypeValidators[id];
@@ -54,29 +56,43 @@ function createZod(typeScheme: TypeScheme): z.ZodType {
         if (max) { _zod = _zod.max(max); }
         if (regex) { _zod = _zod.regex(new RegExp(regex)); }
         return _zod;
-    } else if (typeScheme.type === 'number') {
+    }
+    
+    if (typeScheme.type === 'number') {
         const { decimals, max, min } = typeScheme;
         let _zod = z.number();
         if (min) { _zod = _zod.min(min); }
         if (max) { _zod = _zod.max(max); }
         if (decimals) { _zod = _zod.multipleOf(1 / (10 ** decimals)); }
         return _zod;
-    } else if (typeScheme.type === 'integer') {
+    }
+    
+    if (typeScheme.type === 'integer') {
         const { max, min, step } = typeScheme;
         let _zod = z.number();
         if (min) { _zod = _zod.min(min); }
         if (max) { _zod = _zod.max(max); }
         if (step) { _zod = _zod.multipleOf(step); }
         return _zod;
-    } else if (typeScheme.type === 'date') {
+    }
+    
+    if (typeScheme.type === 'date') {
         return z.number();
-    } else if (typeScheme.type === 'boolean') {
+    }
+    
+    if (typeScheme.type === 'boolean') {
         return z.boolean();
-    } else if (typeScheme.type === 'binary') {
+    }
+    
+    if (typeScheme.type === 'binary') {
         return z.string();
-    } else if (typeScheme.type === 'array') {
+    }
+    
+    if (typeScheme.type === 'array') {
         return createZod(typeScheme.typeScheme).array();
-    } else if (typeScheme.type === 'object') {
+    }
+    
+    if (typeScheme.type === 'object') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const object: any = {}
         const keys = Object.keys(typeScheme.typeSchemes);
@@ -85,8 +101,11 @@ function createZod(typeScheme: TypeScheme): z.ZodType {
             object[key] = createZod(scheme)
         }
         return z.object(object);
-    } else if (typeScheme.type === 'entity') {
+    }
+    
+    if (typeScheme.type === 'entity') {
         return z.string();
     }
+    
     throw `unable to create zod from TypeScheme`;
 }
