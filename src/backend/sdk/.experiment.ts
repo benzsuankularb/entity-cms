@@ -1,6 +1,7 @@
 import { createSpecBuilderContext } from "./spec-builders/context";
 
 const ctx = createSpecBuilderContext<{ user: string }>();
+
 const entity = ctx
     .entity('e1')
     .singleton()
@@ -23,7 +24,7 @@ const entity = ctx
         ctx.section('sec1')
             .query(async ({ context }) => {
                 return {
-                    pay1: context.user
+                    pay1: '1'
                 }
             }),
         ctx.command('sec1')

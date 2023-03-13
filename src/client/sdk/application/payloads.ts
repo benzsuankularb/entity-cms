@@ -1,9 +1,9 @@
-import { createPayloadsValidator, ValidatePayloadsFunction } from '../../common/payloads-validator';
-import { Spec_WritePayload } from '../../common/specs';
-import { EventEmitter } from "../../utils/event-emitter";
-import { EntityCMSContext } from "./common";
+import { createPayloadsValidator, ValidatePayloadsFunction } from '../../../common/payloads-validator';
+import { Spec_WritePayload } from '../../../common/specs';
+import { EventEmitter } from "../../../utils/event-emitter";
+import { ApplicationContext } from "./context";
 import { ReadEntity } from './entity';
-import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload';
+import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload-fields/payload';
 
 export interface Payloads {
     readonly onValidatedUpdated: EventEmitter<boolean>;
@@ -12,7 +12,7 @@ export interface Payloads {
 }
 
 export interface PayloadsInternalOptions {
-    context: EntityCMSContext;
+    context: ApplicationContext;
     data: {[id: string]: unknown};
     listEntities: { [entity: string]: ReadEntity };
     fieldSpecs: Spec_WritePayload[];

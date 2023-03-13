@@ -1,4 +1,4 @@
-import { Spec_Entity_Section } from "../../../common/specs";
+import { Spec_EntitySection } from "../../../common/specs";
 import { Prettify } from "../../../utils/types";
 import { SpecBuilder_WritePayloads, WritePayloads } from "./write-payload";
 
@@ -8,7 +8,7 @@ export type InferSpecBuilder_EntitySection<T extends SpecBuilder_EntitySection<o
 export class SpecBuilder_EntitySection<_TPayloads = object> {
     
     _type = 'entity-section';
-    _spec: Partial<Spec_Entity_Section>;
+    _spec: Partial<Spec_EntitySection>;
     _payloads: SpecBuilder_WritePayloads;
 
     constructor() {

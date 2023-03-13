@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import { TypeScheme } from "../../common/specs";
-import { EventEmitter } from "../../utils/event-emitter";
-import { DeepReadonly } from "../../utils/types";
-import { EntityCMSContext } from "./common";
-import { ReadEntity } from './entity';
-import { PayloadsInternal } from "./payloads";
+import { TypeScheme } from "../../../../common/specs";
+import { EventEmitter } from "../../../../utils/event-emitter";
+import { DeepReadonly } from "../../../../utils/types";
+import { ApplicationContext } from "../context";
+import { ReadEntity } from '../entity';
+import { PayloadsInternal } from "../payloads";
 
 export interface PayloadField<T = unknown> {
     readonly onMetaUpdated: EventEmitter<PayloadFieldMeta>;
@@ -33,7 +33,7 @@ export interface PayloadField_Value<T> extends PayloadField<T> {
 }
 
 export interface PayloadField_Binary extends PayloadField<string> {
-    upload(val: FormData): void;
+    upload(file: File): void;
     download(): Promise<void>;
 }
 
@@ -58,7 +58,7 @@ export interface PayloadFieldInternalOptions<T> {
     id: string;
     typeScheme: TypeScheme;
     meta: PayloadFieldMeta;
-    context: EntityCMSContext;
+    context: ApplicationContext;
     initialValue: T;
 }
 
@@ -67,7 +67,7 @@ export abstract class PayloadFieldInternal<T> implements PayloadField<T> {
     readonly onValidatedUpdated: EventEmitter<boolean>;
     readonly onValueUpdated: EventEmitter<T>;
     
-    readonly context: EntityCMSContext;
+    readonly context: ApplicationContext;
     readonly parent: PayloadsInternal;
     readonly id: string;
     readonly typeScheme: TypeScheme;
@@ -183,7 +183,7 @@ export class PayloadFieldInternal_Value<T> extends PayloadFieldInternal<T> imple
 }
 
 export class PayloadFieldInternal_Binary extends PayloadFieldInternal<string> implements PayloadField_Binary {
-    upload(data: FormData): void {
+    upload(file: File): void {
         throw new Error("Method not implemented.");
     }
 
