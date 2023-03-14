@@ -1,5 +1,5 @@
 import { Spec_MenuItem, Spec_Root } from '../../../common/specs';
-import { RpcClient } from '../../rpc/client';
+import { AppRpc } from '../../rpc/client';
 import { ApplicationContext, CustomFunction } from './context';
 import { EntityEndpoint } from './enitity-endpoint';
 
@@ -7,7 +7,7 @@ export type MenuItem = Spec_MenuItem;
 
 export interface ApplicationOptions {
     spec: Spec_Root;
-    rpc: RpcClient;
+    rpc: AppRpc;
 }
 
 export class Application {

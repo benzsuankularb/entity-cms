@@ -4,15 +4,15 @@ import { CreateTRPCProxyClient, createTRPCProxyClient, httpBatchLink } from "@tr
 import type { ExecuteCommand, ExecuteCommandOptions, ExecuteGlobalCommandOptions, ExecuteGlobalCommandResponse, GetEntityOptions, GetEntityResposne, QueryReadEntitiesOptions, QueryReadEntitiesResponse, SuggestCommandInputOptions, SuggestCommandInputResponse, SuggestGlobalCommandInputOptions, SuggestGlobalCommandInputResponse } from "../../../backend/rpc/app-rpc";
 import type { TrpcEntityEndpointRouter } from "../../../backend/rpc/app-rpc/trpc";
 
+import { RpcClientContext } from "../context";
 import { EntityEndpointRpc } from "../interfaces";
-import { RpcClientRequestContext } from "../request-context";
 
-export interface TrpcEntityEndpointRpcOptions { url: string, context: RpcClientRequestContext }
+export interface TrpcEntityEndpointRpcOptions { url: string, context: RpcClientContext }
 
 export class TrpcEntityEndpointRpc implements EntityEndpointRpc {
 
     private readonly _router: CreateTRPCProxyClient<TrpcEntityEndpointRouter>;
-    private readonly _context: RpcClientRequestContext;
+    private readonly _context: RpcClientContext;
     
     constructor(options: TrpcEntityEndpointRpcOptions) {
         this._context = options.context;

@@ -1,20 +1,20 @@
 import type { UploadResponse } from "../../../backend/rpc/app-rpc";
+import { RpcClientContext } from "../context";
 import { BinaryRpc, DownloadOptions, UploadOptions } from "../interfaces";
-import { RpcClientRequestContext } from "../request-context";
 
 export interface HttpBinaryRpcOptions {
-    context: RpcClientRequestContext;
-    appUrl: string;
+    context: RpcClientContext;
+    url: string;
 }
 
 export class HttpBinaryRpc implements BinaryRpc {
     
     private readonly _url: string;
-    private readonly _context: RpcClientRequestContext;
+    private readonly _context: RpcClientContext;
     
     constructor(options: HttpBinaryRpcOptions) {
         this._context = options.context;
-        this._url = `${options.appUrl}/binaries`;
+        this._url = options.url;
     }
     
     async upload(options: UploadOptions): Promise<UploadResponse> {

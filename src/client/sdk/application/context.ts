@@ -1,10 +1,10 @@
 import { Spec_Root } from '../../../common/specs';
-import { RpcClient } from '../../rpc/client';
+import { AppRpc } from '../../rpc/client';
 
 export type CustomFunction = () => Promise<void>;
 
 export interface ApplicationContext {
-    rpc: RpcClient;
+    rpc: AppRpc;
     spec: Spec_Root;
     functions: { [id: string]: CustomFunction; };
 }

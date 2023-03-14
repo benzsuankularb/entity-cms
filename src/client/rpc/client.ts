@@ -1,38 +1,46 @@
 // import { AppRpc, SpecRpc } from "../../backend/rpc";
-import { EntityEndpointRpc, SpecRpc } from "./interfaces";
-import { RpcClientRequestContext } from "./request-context";
+import { RpcClientContext } from "./context";
+import { HttpBinaryRpc } from "./http/binary-rpc";
+import { BinaryRpc, EntityEndpointRpc, SpecRpc } from "./interfaces";
 import { TrpcEntityEndpointRpc } from "./trpc/enitity-endpoint-rpc";
 import { TrpcSpecRpc } from "./trpc/spec-rpc";
 
-export interface RpcClientOptions {
-  specUrl: string;
-  appUrl: string;
+
+export interface AppRpc {
+  binary: BinaryRpc;
+  entityEndpoint: EntityEndpointRpc;
 }
 
 export class RpcClient {
 
-  private readonly _context: RpcClientRequestContext;
-
-  readonly entityEndpoint: EntityEndpointRpc;
-  // readonly binary: BinaryRpc;
-  readonly spec: SpecRpc;
+  private readonly _context: RpcClientContext;
   
-  constructor(options: RpcClientOptions) {
+  constructor() {
     this._context = {};
-
-    this.entityEndpoint = new TrpcEntityEndpointRpc({
-      url: options.appUrl,
-      context: this._context,
-    });
-    
-    this.spec = new TrpcSpecRpc({
-      url: options.specUrl,
-      context: this._context,
-    });
   }
 
   setAuthentication(val?: string) {
     this._context.authentication = val;
+  }
+  
+  spec(url: string): SpecRpc {
+    return new TrpcSpecRpc({
+      url,
+      context: this._context,
+    });
+  }
+
+  app(url: string): AppRpc {
+    return {
+      entityEndpoint: new TrpcEntityEndpointRpc({
+        url: `${url}/endpoints`,
+        context: this._context,
+      }),
+      binary: new HttpBinaryRpc({
+        url: `${url}/binaries`,
+        context: this._context,
+      })
+    }
   }
   
 }
