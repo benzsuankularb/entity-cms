@@ -1,4 +1,4 @@
-import { Spec_EntityCommand } from "../../../common/specs";
+import { Spec_EntityCommand, Spec_WritePayload } from "../../../common/specs";
 import { ApplicationContext } from "./context";
 import { Payloads } from "./payloads";
 
@@ -28,10 +28,21 @@ export class EntityCommand {
     constructor(options: EntityCommandOptions) {
         this._context = options.context;
         this._spec = options.spec;
-
         this.entityType = options.entityType;
         this.endpoint = options.endpoint;
         this.entityId = options.entityId;
+        
+        let payloadSpecs: Spec_WritePayload[];
+        if (this._spec.command === 'execute') {
+            payloadSpecs = this._spec.payloads;
+        } else {
+            payloadSpecs = [];
+        }
+        
+        this.payloads = new Payloads({
+            context: this._context,
+            specs: payloadSpecs,
+        });
     }
 
     async execute(): Promise<void> {

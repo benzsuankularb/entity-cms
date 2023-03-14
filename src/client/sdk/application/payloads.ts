@@ -2,37 +2,38 @@ import { createPayloadsValidator, ValidatePayloadsFunction } from '../../../comm
 import { Spec_WritePayload } from '../../../common/specs';
 import { EventEmitter } from "../../../utils/event-emitter";
 import { ApplicationContext } from "./context";
-import { ReadEntity } from './entity';
-import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Value, PayloadField_Unknown } from './payload-fields/payload';
+import { PayloadField_Unknown } from './payload-fields/interfaces';
+import { PayloadFieldInternal, PayloadFieldInternal_Binary, PayloadFieldInternal_Entity, PayloadFieldInternal_Primitive } from './payload-fields/internals';
 
-export interface Payloads {
-    readonly onValidatedUpdated: EventEmitter<boolean>;
-    readonly validated: boolean;
-    readonly fields: readonly PayloadField_Unknown[];
-}
-
-export interface PayloadsInternalOptions {
+export interface PayloadsOptions {
     context: ApplicationContext;
-    data: {[id: string]: unknown};
-    listEntities: { [entity: string]: ReadEntity };
-    fieldSpecs: Spec_WritePayload[];
+    specs: Spec_WritePayload[];
 }
 
-export class PayloadsInternal implements Payloads {
+export class Payloads {
     
-    readonly onValidatedUpdated: EventEmitter<boolean>;
-    validated: boolean;
+    private readonly _validatePayloads: ValidatePayloadsFunction;
+    private readonly _fields: { [id: string]: PayloadFieldInternal<unknown> };
+    private readonly _fieldSpecs: Spec_WritePayload[];
     
-    private _fieldSpecs: Spec_WritePayload[];
-    private _fields: { [id: string]: PayloadFieldInternal<unknown> };
-    private _validatePayloads: ValidatePayloadsFunction;
+    private _validated: boolean;
 
-    constructor(options: PayloadsInternalOptions) {
+    readonly onValidatedUpdated: EventEmitter<boolean>;
+
+    get validated(): boolean {
+        return this._validated;
+    }
+
+    get fields(): readonly PayloadField_Unknown[] {
+        return Object.values(this._fields);
+    }
+
+    constructor(options: PayloadsOptions) {
         this.onValidatedUpdated = new EventEmitter();
-        this.validated = false;
+        this._validated = false;
         
-        this._validatePayloads = createPayloadsValidator(options.fieldSpecs);
-        this._fieldSpecs = options.fieldSpecs;
+        this._validatePayloads = createPayloadsValidator(options.specs);
+        this._fieldSpecs = options.specs;
         this._fields = {};
 
         // create fields
@@ -40,7 +41,7 @@ export class PayloadsInternal implements Payloads {
             const type = fieldSpec.typeScheme.type;
             const fieldOptions = {
                 context: options.context,
-                initialValue: options.data[fieldSpec.id] as never,
+                // initialValue: options.initialValues[fieldSpec.id] as never,
                 id: fieldSpec.id,
                 meta: {
                     hidden: false,
@@ -62,7 +63,7 @@ export class PayloadsInternal implements Payloads {
             } else if (type === 'entity') {
                 field = new PayloadFieldInternal_Entity(fieldOptions);
             } else {
-                field = new PayloadFieldInternal_Value<unknown>(fieldOptions);
+                field = new PayloadFieldInternal_Primitive<unknown>(fieldOptions);
             }
             
             field.onValueUpdated.addListener(this._revalidate.bind(this));
@@ -70,32 +71,28 @@ export class PayloadsInternal implements Payloads {
         }
     }
     
-    get fields(): PayloadField_Unknown[] {
-        return Object.values(this._fields);
-    }
-
     private _revalidate() {
         const values = this.values();
         const [valid, _invalidPayloadIds] = this._validatePayloads(values);
         const invalidPayloadIds = new Set(_invalidPayloadIds);
         Object.values(this._fields).forEach(field => {
-            const isValidated = !invalidPayloadIds.has(field.id);
+            const isValidated = !invalidPayloadIds.has(field.payloadId);
             field.setValidated(isValidated);
         });
         this._setValidated(valid);
     }
 
     private _setValidated(val: boolean) {
-        if (this.validated === val) {
+        if (this._validated === val) {
             return;
         }
-        this.validated = val;
+        this._validated = val;
         this.onValidatedUpdated.invoke(val);
     }
 
     values() {
         const result: { [id: string]: unknown } = {};
-        Object.values(this._fields).forEach(field => result[field.id] = field.value);
+        Object.values(this._fields).forEach(field => result[field.payloadId] = field.value);
         return result;
     }
 

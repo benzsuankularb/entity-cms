@@ -1,5 +1,6 @@
 import { Spec_EntitySection } from "../../../common/specs";
 import { ApplicationContext } from "./context";
+import { Payloads } from "./payloads";
 
 export interface EntitySectionOptions {
     context: ApplicationContext;
@@ -19,7 +20,8 @@ export class EntitySection {
     readonly endpoint?: string;
     readonly entityId: string;
     readonly sectionId: string;
-    
+    readonly payloads: Payloads;
+
     get readOnly(): boolean {
         return this._spec.readOnly ?? false;
     }
@@ -32,6 +34,10 @@ export class EntitySection {
         this.endpoint = options.endpoint;
         this.entityId = options.entityId;
         this.sectionId = options.sectionId;
+        this.payloads = new Payloads({
+            context: this._context,
+            specs: this._spec.payloads,
+        });
     }
 
     async update(): Promise<void> {

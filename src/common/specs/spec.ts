@@ -23,13 +23,6 @@ const Spec_EntityCommand_Delete = z.object({
     endpoints: z.string().optional(),
 });
 
-const Spec_EntityCommand_Update = z.object({
-    command: z.enum(['update']),
-    section: z.string(),
-    endpoints: z.string().optional(),
-    score: z.string()
-});
-
 const Spec_EntityCommand_Execute = z.object({
     command: z.enum(['execute']),
     action: z.string(),
@@ -40,7 +33,6 @@ const Spec_EntityCommand_Execute = z.object({
 });
 
 const Spec_EntityCommand = Spec_EntityCommand_Delete
-    .or(Spec_EntityCommand_Update)
     .or(Spec_EntityCommand_Execute);
 
 
@@ -75,7 +67,8 @@ const Spec_EntityGlobalQuery = z.object({
 const Spec_EntitySection = z.object({
     name: z.string(),
     readOnly: z.boolean().optional(),
-    payloads: Spec_WritePayload.array()
+    payloads: Spec_WritePayload.array(),
+    endpoints: z.string().array().optional()
 });
 
 const Spec_Entity = z.object({
@@ -139,7 +132,6 @@ export type Spec_EntityGloablQuery = z.infer<typeof Spec_EntityGlobalQuery>;
 export type Spec_EntityGlobalCommand = z.infer<typeof Spec_EntityGlobalCommand>;
 
 export type Spec_EntityCommand_Delete = z.infer<typeof Spec_EntityCommand_Delete>;
-export type Spec_EntityCommand_Update = z.infer<typeof Spec_EntityCommand_Update>;
 export type Spec_EntityCommand_Execute = z.infer<typeof Spec_EntityCommand_Execute>;
 
 export type Spec_EntityGlobalCommand_Execute = z.infer<typeof Spec_EntityGlobalCommand_Execute>;

@@ -2,7 +2,7 @@ import { Spec_Entity } from "../../../common/specs";
 import { ApplicationContext } from "./context";
 import { EntityCommand } from "./entity-command";
 import { EntitySection } from "./entity-section";
-import { ReadonlyPayloadField_Unknown } from "./readonly-payload";
+import { ReadonlyPayloadField_Unknown } from "./readonly-payload-field";
 
 export interface EntityOptions {
     context: ApplicationContext;

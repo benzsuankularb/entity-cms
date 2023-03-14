@@ -22,5 +22,9 @@ export class EntityGlobalCommand {
         this._spec = options.spec;
         this.entityType = options.entityType;
         this.endpoint = options.endpoint;
+        this.payloads = new Payloads({
+            context: this._context,
+            specs: this._spec.payloads
+        });
     }
 }
